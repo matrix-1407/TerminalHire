@@ -22,3 +22,7 @@ Thumbs.db
 # Generated files 
 exports/ 
 uploads/
+
+PDF and DOCX files
+data/resumes/*.pdf
+data/resumes/*.docx
