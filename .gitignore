@@ -23,6 +23,6 @@ Thumbs.db
 exports/ 
 uploads/
 
-PDF and DOCX files
+#PDF and DOCX files
 data/resumes/*.pdf
 data/resumes/*.docx
