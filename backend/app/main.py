@@ -3,6 +3,10 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.services.profile_service import load_candidate_profile
 
+from app.prompts.prompt_builder import build_system_prompt
+
+from app.services.fast_answers import get_fast_answer
+
 app = FastAPI(title="TerminalHire API")
 
 app.add_middleware(
@@ -28,3 +32,13 @@ async def health():
 async def get_profile():
     profile = load_candidate_profile()
     return profile.model_dump()
+
+@app.get("/prompt-preview")
+async def prompt_preview():
+    prompt = build_system_prompt()
+    return {"length": len(prompt), "preview": prompt[:3000]}
+
+@app.get("/fast-answer")
+async def fast_answer(q: str):
+    answer = get_fast_answer(q)
+    return {"answer": answer}

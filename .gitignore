@@ -1,28 +1,48 @@
-# Python 
-backend/.venv/ 
-backend/__pycache__/ 
-backend/*.pyc 
+# =========================
+# Python
+# =========================
+backend/.venv/
+backend/__pycache__/
+backend/**/*.pyc
+backend/**/*.pyo
+backend/**/*.pyd
+backend/.pytest_cache/
+backend/.mypy_cache/
+backend/.ruff_cache/
 
-# Node 
-frontend/node_modules/ 
-frontend/dist/ 
+# =========================
+# Node / React
+# =========================
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
 
-# Env 
-.env 
-backend/.env 
-frontend/.env 
+# =========================
+# Environment files
+# =========================
+.env
+backend/.env
+frontend/.env
 
-# OS 
-.DS_Store 
-Thumbs.db 
+# =========================
+# VS Code
+# =========================
+.vscode/
 
-# VS Code 
-.vscode/ 
+# =========================
+# OS files
+# =========================
+.DS_Store
+Thumbs.db
 
-# Generated files 
-exports/ 
+# =========================
+# Uploads / exports
+# =========================
 uploads/
+exports/
 
-#PDF and DOCX files
+# =========================
+# Local resumes (never commit)
+# =========================
 data/resumes/*.pdf
 data/resumes/*.docx
