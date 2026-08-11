@@ -1,11 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
 from app.services.profile_service import load_candidate_profile
 
 from app.prompts.prompt_builder import build_system_prompt
 
 from app.services.fast_answers import get_fast_answer
+from app.routes.chat import router as chat_router
 
 app = FastAPI(title="TerminalHire API")
 
@@ -16,7 +16,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 
 @app.get("/")
 async def root():
@@ -42,3 +41,5 @@ async def prompt_preview():
 async def fast_answer(q: str):
     answer = get_fast_answer(q)
     return {"answer": answer}
+
+app.include_router(chat_router, prefix="/api", tags=["chat"])

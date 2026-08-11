@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-from app.models import CandidateProfile
+from app.models.profile import CandidateProfile
 
 
 BASE_DIR = Path(__file__).resolve().parents[3]

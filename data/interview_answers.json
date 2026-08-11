@@ -1,22 +1,43 @@
 {
   "answers": {
     "tell_me_about_yourself": {
-      "answer": "I'm a final-year Electronics and Telecommunication engineering student from Pune with a strong interest in backend development, cloud technologies, networking, and AI-integrated systems. I enjoy building practical projects that combine multiple areas of software engineering, such as PacketSentry for traffic analysis and PharmaGuard for AI-assisted pharmacogenomic analysis. Most of my learning has been project-driven, and I've worked with Python, FastAPI, Node.js, MySQL, cloud deployment tools, and LLM integrations. I'm currently looking for backend, cloud, or software engineering opportunities where I can contribute while continuing to grow as an engineer."
+      "answer": "Mrudul Bokade is a final-year Electronics and Telecommunication engineering student from Pune with a strong interest in backend development, cloud technologies, networking, and AI-integrated systems. He has built projects such as PacketSentry, PharmaGuard, NyaySetu, and TerminalHire, and is currently seeking backend, cloud, software engineering, or AI-application internship opportunities."
     },
-    "why_should_we_hire_you": {
-      "answer": "You should hire me because I focus on building complete, working systems rather than isolated features. Through projects such as PacketSentry and PharmaGuard, I have gained hands-on experience with backend development, APIs, databases, cloud deployment, networking concepts, and AI integration. I am a fast learner, communicate clearly, and try to think about scalability, reliability, and future improvements before implementing a solution. While I am still early in my career and do not have formal industry internship experience yet, I have consistently taken ownership of projects and delivered end-to-end applications."
+    "tell_me_about_candidate": {
+      "answer": "Mrudul Bokade is a final-year Electronics and Telecommunication engineering student from Pune with a strong interest in backend development, cloud technologies, networking, and AI-integrated systems. He has built projects such as PacketSentry, PharmaGuard, NyaySetu, and TerminalHire, and is currently seeking backend, cloud, software engineering, or AI-application internship opportunities."
+    },
+    "why_should_we_hire_candidate": {
+      "answer": "Based on the current profile, Mrudul would be a strong candidate for backend, cloud, software engineering, and AI-application internship roles because he focuses on building complete, working systems rather than isolated features. Through projects such as PacketSentry, PharmaGuard, and TerminalHire, he has gained hands-on experience with backend development, APIs, databases, cloud deployment, networking concepts, and AI integration. He learns quickly, communicates clearly, and thinks about scalability, reliability, and future improvements while building solutions. Although he is still early in his career and does not yet have formal industry internship experience, he has consistently taken ownership of projects and delivered end-to-end applications."
     },
     "career_goal": {
-      "answer": "My long-term goal is to grow into a cloud and DevOps engineer with strong applied AI capabilities. In the near term, I want to strengthen my backend, cloud, deployment, infrastructure and systems engineering skills through real-world projects and industry experience."
+      "answer": "Mrudul's long-term goal is to grow into a cloud and DevOps engineer with strong applied AI capabilities. In the near term, he wants to strengthen his backend, cloud, deployment, infrastructure, and systems engineering skills through real-world projects and industry experience."
     },
     "industry_experience": {
-      "answer": "I have not completed a formal industry internship yet. I have completed a one-month project-based full-stack web development training program and have gained most of my practical experience through independent and team-based projects, hackathons and technical involvement in college."
+      "answer": "Mrudul has not completed a formal industry internship yet. He has completed a one-month project-based full-stack web development training program and has gained most of his practical experience through independent and team-based projects, hackathons, and technical involvement in college activities."
     },
     "biggest_strength": {
-      "answer": "One of my biggest strengths is that I learn quickly and then try to apply what I learn by building something practical. I also tend to think about how a solution can be improved, made more reliable, or scaled rather than stopping once the basic functionality works."
+      "answer": "One of Mrudul's strongest qualities is that he learns quickly and applies what he learns by building practical projects. He also tends to think about how a solution can be improved, made more reliable, or scaled further rather than stopping once the basic functionality works."
     },
     "biggest_weakness": {
-      "answer": "I sometimes spend too much time polishing a solution because I want the final result to be as good as possible. I'm working on improving prioritization by separating what is essential for the current goal from what can be improved later."
+      "answer": "A current area of improvement for Mrudul is that he can spend extra time polishing a solution because he wants the final result to be as good as possible. He is actively working on improving prioritization by separating what is essential for the current goal from what can be refined later."
+    },
+    "roles_applying_for": {
+      "answer": "Mrudul is currently applying for Backend Developer Intern, Software Engineer Intern, Cloud Engineer Intern, DevOps Intern, AI Application Engineer Intern, and Security or Networking Intern roles."
+    },
+    "preferred_work_mode": {
+      "answer": "Mrudul is primarily looking for hybrid or on-site opportunities. He is open to relocation depending on the role, learning opportunities, and long-term growth potential."
+    },
+    "best_projects": {
+      "answer": "Mrudul's strongest projects are PacketSentry, a deep packet inspection and traffic analysis system; PharmaGuard, an AI-assisted pharmacogenomic analysis platform; NyaySetu, a RAG-based legal intelligence platform; and TerminalHire, an AI-powered recruiter-facing portfolio assistant that combines structured candidate data, prompt engineering, and LLM-based conversational interaction."
+    },
+    "hardest_project": {
+      "answer": "The most technically challenging project was PacketSentry because it required correlating information across multiple protocol layers and designing a reliable pipeline that connects packet, flow, DNS, HTTP, and TLS metadata to identify application-level traffic and suspicious behavior."
+    },
+    "what_makes_him_different": {
+      "answer": "What makes Mrudul stand out is that he focuses on building complete end-to-end systems rather than isolated assignments. His projects combine backend development, networking, cloud deployment, AI integration, and practical problem solving, and he is able to independently take a project from idea to deployment."
+    },
+    "availability": {
+      "answer": "Mrudul is available for internship opportunities and is actively looking for roles where he can contribute to backend, cloud, AI-integrated, or systems-oriented engineering work while continuing to learn and grow professionally."
     }
   }
 }

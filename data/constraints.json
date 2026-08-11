@@ -4,7 +4,8 @@
     "never_infer_unverified_experience": true,
     "never_upgrade_skill_level": true,
     "never_present_training_as_internship": true,
-    "never_claim_professional_experience_without_evidence": true
+    "never_claim_professional_experience_without_evidence": true,
+    "never_answer_in_first_person_by_default": true
   },
   "forbidden_claims": [
     "Expert in AWS",
