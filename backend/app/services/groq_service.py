@@ -2,6 +2,7 @@ import os
 
 from dotenv import load_dotenv
 from groq import Groq
+from groq import Groq, RateLimitError
 
 from app.prompts.prompt_builder import build_system_prompt
 
@@ -21,40 +22,47 @@ model = "llama-3.3-70b-versatile"
 
 
 def generate_response(message: str, history: list):
-    system_prompt = build_system_prompt()
+    try:
+        system_prompt = build_system_prompt()
 
-    messages = [
-        {"role": "system", "content": system_prompt}
-    ]
+        messages = [
+            {"role": "system", "content": system_prompt}
+        ]
 
-    for msg in history[-6:]:
+        for msg in history[-6:]:
+            messages.append({
+                "role": msg.role,
+                "content": msg.content
+            })
+
         messages.append({
-            "role": msg.role,
-            "content": msg.content
+            "role": "user",
+            "content": message
         })
 
-    messages.append({
-        "role": "user",
-        "content": message
-    })
+        # Dynamic response length
+        detailed_keywords = [
+            "explain", "detail", "deep", "architecture",
+            "how does", "walk me through", "hardest",
+            "challenge", "improve"
+        ]
 
-    # Dynamic response length
-    detailed_keywords = [
-        "explain", "detail", "deep", "architecture",
-        "how does", "walk me through", "hardest",
-        "challenge", "improve"
-    ]
+        lower_msg = message.lower()
 
-    lower_msg = message.lower()
+        max_tokens = 700 if any(k in lower_msg for k in detailed_keywords) else 350
 
-    max_tokens = 700 if any(k in lower_msg for k in detailed_keywords) else 350
+        completion = client.chat.completions.create(
+            model=model,
+            messages=messages,
+            temperature=0.3,
+            max_tokens=max_tokens,
+            top_p=0.9,
+        )
 
-    completion = client.chat.completions.create(
-        model=model,
-        messages=messages,
-        temperature=0.3,
-        max_tokens=max_tokens,
-        top_p=0.9,
-    )
-
-    return completion.choices[0].message.content
+        return completion.choices[0].message.content
+    
+    except RateLimitError:
+        return (
+            "TerminalHire has temporarily reached the daily Groq API limit. "
+            "Please try again later or try using a shorter query."
+        )
