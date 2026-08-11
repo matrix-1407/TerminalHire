@@ -27,7 +27,7 @@ def generate_response(message: str, history: list):
         {"role": "system", "content": system_prompt}
     ]
 
-    for msg in history[-10:]:
+    for msg in history[-6:]:
         messages.append({
             "role": msg.role,
             "content": msg.content
@@ -38,11 +38,22 @@ def generate_response(message: str, history: list):
         "content": message
     })
 
+    # Dynamic response length
+    detailed_keywords = [
+        "explain", "detail", "deep", "architecture",
+        "how does", "walk me through", "hardest",
+        "challenge", "improve"
+    ]
+
+    lower_msg = message.lower()
+
+    max_tokens = 700 if any(k in lower_msg for k in detailed_keywords) else 350
+
     completion = client.chat.completions.create(
         model=model,
         messages=messages,
         temperature=0.3,
-        max_tokens=400,
+        max_tokens=max_tokens,
         top_p=0.9,
     )
 

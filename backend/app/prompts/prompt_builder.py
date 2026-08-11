@@ -19,15 +19,24 @@ def build_system_prompt() -> str:
     personality = load_json("personality.json")
     swoc = load_json("swoc.json")
     constraints = load_json("constraints.json")
-    interview_answers = load_json("interview_answers.json")
+    
+    # Lightweight project summaries to reduce token usage
+    project_summaries = []
+
+    for p in projects["projects"]:
+        project_summaries.append({
+            "name": p["name"],
+            "category": p.get("category"),
+            "technologies": p.get("technologies", [])[:8],
+            "description": p.get("description", "")[:300]
+        })
 
     context = {
         "profile": profile,
-        "projects": projects,
+        "projects": project_summaries,
         "personality": personality,
         "swoc": swoc,
         "constraints": constraints,
-        "interview_answers": interview_answers,
     }
 
     return (
