@@ -1,0 +1,110 @@
+{
+  "identity": {
+    "full_name": "Mrudul Bokade",
+    "professional_title": "Software Developer | AI-Integrated Systems & Security | Cloud Enthusiast",
+    "current_city": "Pune, Maharashtra, India",
+    "hometown": "Nagpur, Maharashtra, India",
+    "open_to_relocation": "Depends on the opportunity",
+    "preferred_work_mode": [
+      "Hybrid",
+      "On-site"
+    ]
+  },
+  "education": {
+    "institution": "Ajeenkya DY Patil School of Engineering",
+    "location": "Lohegaon, Pune, Maharashtra",
+    "degree": "B.E. in Electronics & Telecommunication Engineering",
+    "start_year": 2023,
+    "graduation_year": 2027,
+    "cgpa": 8.0,
+    "university": "Savitribai Phule Pune University"
+  },
+  "career": {
+    "current_stage": "Fourth-year engineering student",
+    "primary_positioning": "Backend & Cloud-Oriented Software Engineer",
+    "secondary_positioning": "AI-Integrated Systems & Security Enthusiast",
+    "long_term_direction": "Cloud / DevOps Engineer with Applied AI capabilities",
+    "target_roles": [
+      "Backend Developer Intern",
+      "Software Engineer Intern",
+      "Cloud Engineer Intern",
+      "DevOps Intern",
+      "Cloud and Platform Intern",
+      "AI Application Engineer Intern",
+      "Security / Networking Intern"
+    ]
+  },
+  "skills": {
+    "python": {
+      "confidence": 4,
+      "level": "Strong project-based proficiency"
+    },
+    "javascript": {
+      "confidence": 3.75,
+      "level": "Intermediate project-based proficiency"
+    },
+    "react": {
+      "confidence": 2.50,
+      "level": "Working knowledge"
+    },
+    "node_js": {
+      "confidence": 3.50,
+      "level": "Intermediate project-based proficiency"
+    },
+    "fastapi": {
+      "confidence": 3.25,
+      "level": "Working knowledge"
+    },
+    "sql_mysql": {
+      "confidence": 5,
+      "level": "Strong"
+    },
+    "aws": {
+      "confidence": 4,
+      "level": "Strong foundational knowledge"
+    },
+    "networking": {
+      "confidence": 4.25,
+      "level": "Strong"
+    },
+    "security": {
+      "confidence": 3.25,
+      "level": "Working knowledge"
+    },
+    "llm_rag": {
+      "confidence": 3,
+      "level": "Working project-based knowledge"
+    }
+  },
+  "experience": [
+    {
+      "organization": "CODTECH IT SOLUTIONS",
+      "type": "Training Program",
+      "duration": "1 month",
+      "formal_industry_internship": false,
+      "description": "Completed a project-based full-stack web development training program involving small-scale applications and implementation tasks.",
+      "projects": [
+        "Weather application",
+        "NotePulse collaborative editor",
+        "ZenTalk real-time chat application",
+        "Chrome extension"
+      ]
+    }
+  ],
+  "technical_involvement": [
+    {
+      "organization": "AWS Cloud Club",
+      "role": "Technical Team",
+      "description": "Contributed to organizing cloud-focused workshops and technical events related to AWS technologies."
+    }
+  ],
+  "achievements": [],
+  "certifications": [],
+  "professional_experience": [],
+  "social_links": {
+    "portfolio": "https://mrudul.dev",
+    "github": "https://github.com/matrix-1407",
+    "linkedin": "https://www.linkedin.com/in/mrudul-bokade-140705mb"
+  },
+  "career_statement": "I want to work on industry-level software and cloud projects where I can contribute meaningfully, learn quickly, and continue developing as an engineer."
+}

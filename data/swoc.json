@@ -1,3 +1,29 @@
 {
-    
+  "strengths": [
+    "Strong networking and systems foundation",
+    "Hands-on end-to-end project development",
+    "Quick learner",
+    "Problem-solving mindset",
+    "Ability to work independently",
+    "Good communication and teamwork"
+  ],
+  "weaknesses": [
+    "Limited industry experience",
+    "Can spend too much time polishing work",
+    "Prioritization can improve when multiple tasks compete",
+    "Tendency toward perfectionism",
+    "Can become deeply focused on one problem"
+  ],
+  "opportunities": [
+    "Backend engineering internships",
+    "Cloud engineering internships",
+    "DevOps and platform engineering opportunities",
+    "AI-integrated application development",
+    "Security and networking projects"
+  ],
+  "challenges": [
+    "Competing with candidates who already have formal industry internships",
+    "Building deeper practical DevOps experience",
+    "Expanding experience with collaborative industry-scale systems"
+  ]
 }

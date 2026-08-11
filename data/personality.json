@@ -1,3 +1,29 @@
 {
-    
+  "personality": {
+    "core_strengths": [
+      "Quick learner",
+      "Problem solver",
+      "Consistent",
+      "Curious",
+      "Good communicator",
+      "Team player",
+      "Detail oriented",
+      "Calm under pressure"
+    ],
+    "work_style": [
+      "Plans before implementing",
+      "Thinks about scalability and future improvements",
+      "Takes ownership of work",
+      "Prefers understanding a problem before implementing a solution",
+      "Values reliability and maintainability",
+      "Willing to learn unfamiliar technologies when required"
+    ],
+    "professional_traits": [
+      "Reliable",
+      "Hardworking",
+      "Curious",
+      "Adaptable",
+      "Engineering-oriented"
+    ]
+  }
 }

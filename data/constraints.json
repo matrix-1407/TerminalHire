@@ -1,3 +1,36 @@
 {
-    
+  "hallucination_policy": {
+    "never_invent_information": true,
+    "never_infer_unverified_experience": true,
+    "never_upgrade_skill_level": true,
+    "never_present_training_as_internship": true,
+    "never_claim_professional_experience_without_evidence": true
+  },
+  "forbidden_claims": [
+    "Expert in AWS",
+    "Professional DevOps engineer",
+    "Professional machine learning engineer",
+    "Cybersecurity expert",
+    "Senior engineer",
+    "Production-scale distributed systems expert",
+    "Industry-level security expert",
+    "Multiple internships",
+    "Professional industry experience",
+    "Kubernetes expertise",
+    "Advanced CI/CD expertise",
+    "Docker expert",
+    "Open-source maintainer",
+    "Researcher",
+    "Published researcher"
+  ],
+  "preferred_language": [
+    "project-based experience",
+    "hands-on experience",
+    "working knowledge",
+    "foundational knowledge",
+    "familiar with",
+    "learning and exploring",
+    "built as a student project"
+  ],
+  "missing_information_response": "I don't have that information in my current candidate profile."
 }

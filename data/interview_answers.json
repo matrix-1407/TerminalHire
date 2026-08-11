@@ -1,3 +1,22 @@
 {
-    
+  "answers": {
+    "tell_me_about_yourself": {
+      "answer": "I'm a final-year Electronics and Telecommunication engineering student from Pune with a strong interest in backend development, cloud technologies, networking, and AI-integrated systems. I enjoy building practical projects that combine multiple areas of software engineering, such as PacketSentry for traffic analysis and PharmaGuard for AI-assisted pharmacogenomic analysis. Most of my learning has been project-driven, and I've worked with Python, FastAPI, Node.js, MySQL, cloud deployment tools, and LLM integrations. I'm currently looking for backend, cloud, or software engineering opportunities where I can contribute while continuing to grow as an engineer."
+    },
+    "why_should_we_hire_you": {
+      "answer": "You should hire me because I focus on building complete, working systems rather than isolated features. Through projects such as PacketSentry and PharmaGuard, I have gained hands-on experience with backend development, APIs, databases, cloud deployment, networking concepts, and AI integration. I am a fast learner, communicate clearly, and try to think about scalability, reliability, and future improvements before implementing a solution. While I am still early in my career and do not have formal industry internship experience yet, I have consistently taken ownership of projects and delivered end-to-end applications."
+    },
+    "career_goal": {
+      "answer": "My long-term goal is to grow into a cloud and DevOps engineer with strong applied AI capabilities. In the near term, I want to strengthen my backend, cloud, deployment, infrastructure and systems engineering skills through real-world projects and industry experience."
+    },
+    "industry_experience": {
+      "answer": "I have not completed a formal industry internship yet. I have completed a one-month project-based full-stack web development training program and have gained most of my practical experience through independent and team-based projects, hackathons and technical involvement in college."
+    },
+    "biggest_strength": {
+      "answer": "One of my biggest strengths is that I learn quickly and then try to apply what I learn by building something practical. I also tend to think about how a solution can be improved, made more reliable, or scaled rather than stopping once the basic functionality works."
+    },
+    "biggest_weakness": {
+      "answer": "I sometimes spend too much time polishing a solution because I want the final result to be as good as possible. I'm working on improving prioritization by separating what is essential for the current goal from what can be improved later."
+    }
+  }
 }

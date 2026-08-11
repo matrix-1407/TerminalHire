@@ -1,3 +1,185 @@
 {
-    
+  "projects": [
+    {
+      "name": "PacketSentry",
+      "category": "Deep Packet Inspection and Traffic Analysis",
+      "github": "https://github.com/matrix-1407/PacketSentry-DPI-Tool",
+      "ownership": "Solo",
+      "description": "A security-focused Deep Packet Inspection and traffic analysis system for parsing PCAP traffic, tracking flows, inspecting protocols, evaluating rules, detecting suspicious behavior, and generating structured reports.",
+      "technologies": [
+        "Python",
+        "Packet Analysis",
+        "Networking",
+        "Deep Packet Inspection",
+        "Isolation Forest",
+        "JSON",
+        "HTML"
+      ],
+      "architecture": [
+        "PCAP parsing",
+        "Flow tracking",
+        "Protocol inspection",
+        "Rule evaluation",
+        "Report generation"
+      ],
+      "key_features": [
+        "Packet parsing across Ethernet, IP, TCP and UDP layers",
+        "TLS SNI inspection",
+        "HTTP Host inspection",
+        "DNS correlation",
+        "Regex-based application-level traffic identification",
+        "Suspicious-flow heuristics",
+        "Isolation Forest anomaly detection",
+        "Three-level risk classification",
+        "Structured JSON and HTML reports",
+        "Filtered PCAP exports"
+      ],
+      "contribution": "Designed and developed the complete application independently.",
+      "hardest_part": "Correlating information across multiple protocol layers and designing a reliable pipeline that connects packet, flow, DNS, HTTP and TLS metadata to identify application-level traffic and suspicious behavior.",
+      "future_improvements": [
+        "Real-time traffic monitoring",
+        "Support for additional protocols",
+        "Improved handling of encrypted traffic metadata",
+        "Hybrid rule-based and machine-learning detection",
+        "Interactive traffic visualization dashboard"
+      ]
+    },
+    {
+      "name": "PharmaGuard",
+      "category": "AI-Assisted Pharmacogenomic Analysis",
+      "github": "https://github.com/matrix-1407/pharmaguard-backend",
+      "ownership": "Solo",
+      "description": "A full-stack pharmacogenomic analysis platform that processes VCF files, performs deterministic risk analysis, and generates AI-assisted plain-language explanations.",
+      "technologies": [
+        "Python",
+        "FastAPI",
+        "React",
+        "Gemini API",
+        "Docker",
+        "Render",
+        "Vercel"
+      ],
+      "architecture": [
+        "VCF ingestion",
+        "Variant analysis",
+        "Risk classification",
+        "AI-assisted response generation"
+      ],
+      "key_features": [
+        "VCF upload and processing",
+        "Drug-gene interaction analysis",
+        "Deterministic risk scoring",
+        "AI-assisted explanations",
+        "Confidence scoring",
+        "Variant visualization",
+        "Downloadable JSON reports"
+      ],
+      "contribution": "Designed and developed the full-stack application independently, including the FastAPI backend, VCF processing workflow, deterministic risk analysis, AI explanation layer, React frontend and deployment.",
+      "hardest_part": "Separating deterministic clinical risk analysis from AI-generated explanations so that the language model explains the analysis rather than determining the underlying risk result.",
+      "future_improvements": [
+        "Authentication and stronger patient-data security",
+        "Audit logging",
+        "Improved confidence and explainability mechanisms",
+        "Support for larger datasets",
+        "Asynchronous processing for heavier workloads"
+      ]
+    },
+    {
+      "name": "NyaySetu",
+      "category": "RAG-Based Legal Intelligence Platform",
+      "github": "https://github.com/matrix-1407/NyayaSetu",
+      "ownership": "Team",
+      "description": "An AI-assisted legal intelligence platform supporting document analysis, legal summarization, contextual legal retrieval and simplified legal explanations.",
+      "technologies": [
+        "Python",
+        "Flask",
+        "FAISS",
+        "Sentence Transformers",
+        "Gemini API",
+        "PyPDF2",
+        "React"
+      ],
+      "key_features": [
+        "PDF document extraction",
+        "Legal summarization",
+        "Semantic retrieval",
+        "Regex-based retrieval",
+        "Contextual legal explanations",
+        "Custom dataset containing 50+ IPC sections and legal entries",
+        "Web dashboard"
+      ],
+      "contribution": "Built the complete frontend and dashboard workflow and contributed to parts of the backend implementation and data flow.",
+      "hardest_part": "Designing a frontend that presents retrieved legal information, summaries and AI-generated explanations in a way that remains understandable despite the complexity of the underlying legal content.",
+      "future_improvements": [
+        "Source highlighting",
+        "Improved chunking and retrieval quality",
+        "Multilingual support",
+        "Feedback-based answer refinement"
+      ]
+    },
+    {
+        "name": "My Corner in Matrix",
+        "category": "Personal Portfolio Website",
+        "github": "https://github.com/matrix-1407/my-personal-portfolio-website",
+        "live_url": "https://mrudul.dev",
+        "ownership": "Solo",
+        "description": "A personal portfolio website built from core web technologies with a Matrix-inspired cyberpunk aesthetic, glassmorphism UI, interactive animations, and a custom terminal-style interface for exploring projects and profile information.",
+        "technologies": [
+            "HTML5",
+            "CSS3",
+            "JavaScript",
+            "SVG",
+            "Vercel"
+        ],
+        "key_features": [
+            "Matrix-inspired cyberpunk visual system",
+            "Glassmorphism interface",
+            "Custom terminal overlay",
+            "Typewriter-style terminal output",
+            "Scroll-based animations",
+            "Intersection Observer interactions",
+            "Neural-link style initialization sequence",
+            "Interactive project archive",
+            "Responsive portfolio presentation"
+        ],
+        "contribution": "Designed and developed the complete portfolio website independently, including the interface, visual system, animations, terminal interaction and deployment.",
+        "hardest_part": "Creating an immersive interface and interactive terminal experience using only core web technologies while keeping the website lightweight and fast.",
+        "future_improvements": [
+            "Add more interactive desktop-style experiences",
+            "Improve accessibility and keyboard navigation",
+            "Add richer project interaction and case-study pages",
+            "Introduce a more dynamic content management approach"
+        ]
+    },
+    {
+        "name": "ASCII Art Video Player",
+        "category": "Computer Vision / Terminal Application",
+        "github": "https://github.com/matrix-1407/ASCII-art",
+        "ownership": "Solo",
+        "description": "A Python terminal application that converts video frames into ASCII characters and plays the resulting animation directly in the terminal.",
+        "technologies": [
+            "Python",
+            "OpenCV",
+            "NumPy",
+            "Terminal"
+        ],
+        "key_features": [
+            "Real-time video-to-ASCII conversion",
+            "Supports video formats handled by OpenCV",
+            "Configurable terminal width",
+            "Adjustable playback FPS",
+            "Grayscale frame processing",
+            "Brightness-to-character mapping"
+        ],
+        "contribution": "Designed and developed the complete application independently.",
+        "hardest_part": "Converting video frames into readable ASCII output while maintaining a usable playback experience in a terminal, including frame processing, brightness mapping and configurable display dimensions.",
+        "future_improvements": [
+            "Add colored ANSI terminal output",
+            "Improve frame-processing performance",
+            "Add configurable character sets",
+            "Support image and webcam input",
+            "Add terminal resizing awareness"
+        ]
+    }
+  ]
 }
