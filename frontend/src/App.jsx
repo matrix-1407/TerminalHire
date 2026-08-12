@@ -1,193 +1,340 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import clsx from "clsx";
+
+import {
+  FileText,
+  Globe,
+  Send,
+  Copy,
+  Sparkles,
+  CheckCircle2,
+  Terminal,
+  Code2,
+  UserRound,
+} from "lucide-react";
 
 const desktopItems = [
   {
     label: "Resume",
-    icon: "📄",
-    href: "#",
+    icon: FileText,
+    href: "https://drive.google.com/file/d/1klRUfr8mcAEAr4ZkwcXFO_30c1zcKEKP/view?pli=1",
   },
   {
     label: "Portfolio",
-    icon: "🌐",
+    icon: Globe,
     href: "https://mrudul.dev",
   },
   {
     label: "GitHub",
-    icon: "💻",
+    icon: Code2,
     href: "https://github.com/matrix-1407",
   },
   {
     label: "LinkedIn",
-    icon: "🔗",
-    href: "#",
+    icon: UserRound,
+    href: "https://www.linkedin.com/in/mrudul-bokade-140705mb",
   },
 ];
 
+const quickPrompts = [
+  "Tell me about the candidate",
+  "What are his strongest projects?",
+  "Why should we hire him?",
+  "What cloud skills does he have?",
+  "Explain PacketSentry in detail",
+];
+
+function Message({ role, content }) {
+  const copy = () => navigator.clipboard.writeText(content);
+
+  return (
+    <div className="space-y-3">
+      <div
+        className={clsx(
+          "text-xs font-semibold uppercase tracking-[0.2em]",
+          role === "user" ? "text-cyan-300" : "text-emerald-300"
+        )}
+      >
+        {role === "user" ? "> recruiter" : "terminalhire :: recruiter-mode"}
+      </div>
+
+      <div className="group relative rounded-2xl border border-white/8 bg-white/[0.03] px-5 py-4 shadow-[0_0_0_1px_rgba(255,255,255,0.02)]">
+        {role === "assistant" && content && (
+          <button
+            onClick={copy}
+            className="absolute right-3 top-3 opacity-0 group-hover:opacity-100 transition-opacity text-white/50 hover:text-white"
+            aria-label="Copy response"
+          >
+            <Copy size={16} />
+          </button>
+        )}
+
+        {role === "assistant" ? (
+          <div className="prose prose-invert prose-sm max-w-none prose-headings:text-white prose-p:text-white/90 prose-li:text-white/90 prose-strong:text-white prose-code:text-cyan-200 prose-code:bg-cyan-400/10 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-pre:bg-black/40 prose-pre:border prose-pre:border-white/10">
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
+          </div>
+        ) : (
+          <div className="whitespace-pre-wrap leading-7 text-white/90 text-[15px]">
+            {content}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
-  const [messages, setMessages] = useState([
-    {
-      role: "assistant",
-      content:
-        "Hello. I’m TerminalHire, Mrudul’s AI representative. Ask about projects, skills, cloud, AI, networking, or role fit.",
-    },
-  ]);
+  const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [stage, setStage] = useState("");
+
   const bottomRef = useRef(null);
+  const textareaRef = useRef(null);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, loading]);
 
-  const sendMessage = async () => {
-    if (!input.trim() || loading) return;
+  useEffect(() => {
+    const el = textareaRef.current;
+    if (!el) return;
+    el.style.height = "0px";
+    el.style.height = Math.min(el.scrollHeight, 160) + "px";
+  }, [input]);
 
-    const userMessage = { role: "user", content: input };
+  const sendMessage = async (preset) => {
+    const text = (preset ?? input).trim();
+    if (!text || loading) return;
+
+    const userMessage = { role: "user", content: text };
     const history = [...messages, userMessage];
 
     setMessages(history);
     setInput("");
     setLoading(true);
 
+    const stages = [
+      "Reading candidate profile…",
+      "Checking project knowledge…",
+      "Preparing response…",
+    ];
+
+    let stageIndex = 0;
+    setStage(stages[0]);
+
+    const interval = setInterval(() => {
+      stageIndex = Math.min(stageIndex + 1, stages.length - 1);
+      setStage(stages[stageIndex]);
+    }, 1200);
+
     setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
 
-    const response = await fetch("http://127.0.0.1:8000/api/chat/stream", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        message: userMessage.content,
-        history: messages,
-      }),
-    });
-
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
-
-    let fullText = "";
-
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-
-      const chunk = decoder.decode(value);
-      fullText += chunk;
-
-      setMessages((prev) => {
-        const updated = [...prev];
-        updated[updated.length - 1] = {
-          role: "assistant",
-          content: fullText,
-        };
-        return updated;
+    try {
+      const response = await fetch("http://127.0.0.1:8000/api/chat/stream", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: text,
+          history: messages,
+        }),
       });
-    }
 
-    setLoading(false);
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+
+      let fullText = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value);
+        fullText += chunk;
+
+        setMessages((prev) => {
+          const updated = [...prev];
+          updated[updated.length - 1] = {
+            role: "assistant",
+            content: fullText,
+          };
+          return updated;
+        });
+      }
+    } finally {
+      clearInterval(interval);
+      setStage("");
+      setLoading(false);
+    }
   };
 
+  const hasMessages = messages.length > 0;
+
   return (
-    <div className="min-h-screen bg-[#070b14] text-white overflow-hidden relative">
-      {/* Background glow */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.12),transparent_40%)] pointer-events-none" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,rgba(99,102,241,0.12),transparent_35%)] pointer-events-none" />
+    <div className="min-h-screen bg-[#050816] text-white overflow-hidden relative">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.14),transparent_38%)] pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,rgba(99,102,241,0.14),transparent_34%)] pointer-events-none" />
+      <div className="absolute inset-0 opacity-[0.04] bg-[linear-gradient(rgba(255,255,255,0.12)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.12)_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
 
       {/* Top bar */}
-      <div className="h-12 border-b border-white/10 bg-white/5 backdrop-blur-xl flex items-center justify-between px-4">
+      <div className="h-12 border-b border-white/10 bg-white/[0.04] backdrop-blur-xl flex items-center justify-between px-4">
         <div className="flex items-center gap-3">
           <div className="w-2 h-2 rounded-full bg-red-400" />
           <div className="w-2 h-2 rounded-full bg-yellow-400" />
           <div className="w-2 h-2 rounded-full bg-green-400" />
-          <span className="text-sm text-white/70 ml-2">TerminalHire • Recruiter Mode</span>
+          <span className="text-sm text-white/70 ml-2 font-medium">
+            TerminalHire • Recruiter Mode
+          </span>
         </div>
-        <div className="text-xs text-white/50">Ask the candidate, not just the resume</div>
+
+        <div className="hidden md:flex items-center gap-2 text-xs text-emerald-300/80">
+          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          SYSTEM ONLINE
+        </div>
       </div>
 
       {/* Desktop icons */}
-      <div className="absolute left-6 top-20 hidden md:flex flex-col gap-5">
-        {desktopItems.map((item) => (
-          <a
-            key={item.label}
-            href={item.href}
-            target={item.href.startsWith("http") ? "_blank" : undefined}
-            rel="noreferrer"
-            className="w-20 flex flex-col items-center gap-2 group"
-          >
-            <div className="w-16 h-16 rounded-2xl bg-white/10 border border-white/10 backdrop-blur-xl flex items-center justify-center text-2xl group-hover:bg-white/15 transition">
-              {item.icon}
-            </div>
-            <span className="text-xs text-white/80 text-center">{item.label}</span>
-          </a>
-        ))}
+      <div className="absolute left-6 top-20 hidden lg:flex flex-col gap-5">
+        {desktopItems.map((item) => {
+          const Icon = item.icon;
+
+          return (
+            <a
+              key={item.label}
+              href={item.href}
+              target="_blank"
+              rel="noreferrer"
+              className="w-24 flex flex-col items-center gap-2 group"
+            >
+              <div className="relative w-16 h-16 rounded-2xl bg-white/[0.06] border border-white/10 backdrop-blur-xl flex items-center justify-center transition-all duration-200 group-hover:scale-105 group-hover:bg-white/[0.1] group-hover:shadow-[0_0_30px_rgba(34,211,238,0.15)]">
+                <Icon className="w-7 h-7 text-cyan-200" />
+              </div>
+              <span className="text-xs text-white/80 text-center font-medium">
+                {item.label}
+              </span>
+            </a>
+          );
+        })}
       </div>
 
-      {/* Terminal window */}
-      <div className="h-[calc(100vh-3rem)] flex items-center justify-center p-4">
-        <div className="w-full max-w-5xl h-[92vh] md:h-[84vh] rounded-3xl border border-white/10 bg-white/6 backdrop-blur-2xl shadow-2xl overflow-hidden flex flex-col">
-          {/* Terminal header */}
+      {/* Main window */}
+      <div className="h-[calc(100vh-3rem)] flex items-center justify-center p-3 md:p-5">
+        <div className="w-full max-w-5xl h-[94vh] md:h-[86vh] rounded-[28px] border border-white/10 bg-white/[0.06] backdrop-blur-2xl shadow-[0_20px_80px_rgba(0,0,0,0.45)] overflow-hidden flex flex-col">
+          {/* Header */}
           <div className="h-14 border-b border-white/10 flex items-center justify-between px-5 bg-black/20">
             <div className="flex items-center gap-3">
               <div className="w-3 h-3 rounded-full bg-red-400" />
               <div className="w-3 h-3 rounded-full bg-yellow-400" />
               <div className="w-3 h-3 rounded-full bg-green-400" />
-              <span className="text-sm text-white/70 ml-2">terminalhire --recruiter-mode</span>
+              <span className="text-sm text-white/75 ml-2 font-medium">
+                terminalhire :: recruiter-mode
+              </span>
             </div>
-            <div className="text-xs text-cyan-300/80">LIVE</div>
+
+            <div className="flex items-center gap-2 text-xs text-cyan-300/90 font-medium">
+              <Sparkles size={14} />
+              LIVE
+            </div>
           </div>
 
-          {/* Messages */}
-          <div className="flex-1 overflow-y-auto px-6 py-6 space-y-5 font-mono text-sm">
-            {messages.map((msg, idx) => (
-              <div key={idx} className="space-y-2">
-                <div className="text-cyan-300">
-                  {msg.role === "user" ? "> recruiter" : "> terminalhire"}
-                </div>
-                <div className="whitespace-pre-wrap leading-7 text-white/90">
-                  {msg.content}
-                </div>
-              </div>
-            ))}
+          {/* Chat area */}
+          <div className="flex-1 overflow-y-auto px-4 md:px-6 py-5 space-y-6 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
+            {!hasMessages ? (
+              <div className="h-full flex items-center justify-center">
+                <div className="max-w-2xl text-center space-y-6">
+                  <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-4 py-2 text-sm text-cyan-200">
+                    <Sparkles size={16} />
+                    AI Representative for Mrudul Bokade
+                  </div>
 
-            {loading && (
-              <div className="flex items-center gap-2 text-cyan-300 text-sm">
-                <div className="w-2 h-2 rounded-full bg-cyan-300 animate-pulse" />
-                Analyzing candidate profile...
+                  <div className="space-y-3">
+                    <h1 className="text-4xl md:text-5xl font-semibold tracking-tight">
+                      Ask the candidate,
+                      <br />
+                      <span className="text-cyan-300">not just the resume.</span>
+                    </h1>
+
+                    <p className="text-white/65 text-lg leading-8 max-w-xl mx-auto">
+                      Explore projects, skills, cloud experience, AI work, networking knowledge,
+                      technical strengths, and role fit through a conversational interface.
+                    </p>
+                  </div>
+
+                  <div className="flex flex-wrap justify-center gap-3 pt-2">
+                    {quickPrompts.map((prompt) => (
+                      <button
+                        key={prompt}
+                        onClick={() => sendMessage(prompt)}
+                        className="rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white/85 hover:bg-white/[0.08] hover:border-cyan-400/30 transition-all duration-200"
+                      >
+                        {prompt}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
+            ) : (
+              <>
+                {messages.map((msg, idx) => (
+                  <Message key={idx} role={msg.role} content={msg.content} />
+                ))}
+
+                {loading && (
+                  <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-4 space-y-3">
+                    <div className="flex items-center gap-2 text-emerald-300 text-sm font-medium">
+                      <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                      {stage || "Preparing response…"}
+                    </div>
+
+                    <div className="flex items-center gap-2 text-white/40 text-sm">
+                      <CheckCircle2 size={16} />
+                      Context loaded
+                    </div>
+                  </div>
+                )}
+
+                <div ref={bottomRef} />
+              </>
             )}
-
-            <div ref={bottomRef} />
           </div>
 
           {/* Input */}
-          <div className="border-t border-white/10 p-4 bg-black/20">
-            <div className="flex items-end gap-3 rounded-2xl border border-white/10 bg-black/30 px-4 py-3">
-              <textarea
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault();
-                    sendMessage();
-                  }
-                }}
-                placeholder="Ask about projects, skills, cloud, AI, networking, or role fit..."
-                className="flex-1 bg-transparent outline-none resize-none text-white placeholder:text-white/40 min-h-[24px] max-h-40 font-mono text-sm"
-                rows={1}
-              />
+          <div className="border-t border-white/10 bg-black/20 p-4">
+            <div className="rounded-3xl border border-white/10 bg-black/30 px-4 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
+              <div className="flex items-end gap-3">
+                <textarea
+                  ref={textareaRef}
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      sendMessage();
+                    }
+                  }}
+                  placeholder="Ask about projects, skills, cloud, AI, networking, or role fit…"
+                  className="flex-1 bg-transparent outline-none resize-none text-white placeholder:text-white/40 min-h-[24px] max-h-40 text-[15px] leading-7 overflow-y-auto"
+                  rows={1}
+                />
 
-              <button
-                onClick={sendMessage}
-                disabled={loading || !input.trim()}
-                className="px-4 py-2 rounded-xl bg-cyan-400 text-black font-semibold disabled:opacity-40 hover:bg-cyan-300 transition"
-              >
-                {loading ? "..." : "Send"}
-              </button>
-            </div>
+                <button
+                  onClick={() => sendMessage()}
+                  disabled={loading || !input.trim()}
+                  className="h-11 px-4 rounded-2xl bg-cyan-400 text-black font-semibold disabled:opacity-40 hover:bg-cyan-300 transition-all duration-200 flex items-center gap-2 shadow-[0_8px_24px_rgba(34,211,238,0.25)]"
+                >
+                  <Send size={16} />
+                  <span className="hidden sm:inline">Send</span>
+                </button>
+              </div>
 
-            <div className="mt-2 text-xs text-white/40 px-1 flex items-center justify-between">
-              <span>Press Enter to send </span>
-              <span>Groq • Llama 3.3 70B</span>
+              <div className="mt-3 flex items-center justify-between text-xs text-white/40">
+                <span>Enter to send • Shift+Enter for a new line</span>
+                <span>Groq • Llama 3.3 70B</span>
+              </div>
             </div>
           </div>
         </div>
