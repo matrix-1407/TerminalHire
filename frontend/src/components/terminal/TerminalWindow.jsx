@@ -4,42 +4,16 @@ import remarkGfm from "remark-gfm";
 import clsx from "clsx";
 
 import {
-  FileText,
-  Globe,
   Send,
   Copy,
   Sparkles,
   CheckCircle2,
-  Code2,
-  UserRound,
   RotateCcw,
   Trash2,
 } from "lucide-react";
 
 import Window from "../windows/Window";
-
-const desktopItems = [
-  {
-    label: "Resume",
-    icon: FileText,
-    href: "https://drive.google.com/file/d/1klRUfr8mcAEAr4ZkwcXFO_30c1zcKEKP/view?pli=1",
-  },
-  {
-    label: "Portfolio",
-    icon: Globe,
-    href: "https://mrudul.dev",
-  },
-  {
-    label: "GitHub",
-    icon: Code2,
-    href: "https://github.com/matrix-1407",
-  },
-  {
-    label: "LinkedIn",
-    icon: UserRound,
-    href: "https://www.linkedin.com/in/mrudul-bokade-140705mb",
-  },
-];
+import ParticleText from "../ui/ParticleText";
 
 const quickPrompts = [
   "Tell me about the candidate",
@@ -159,7 +133,14 @@ function Message({
   );
 }
 
-export default function TerminalWindow() {
+export default function TerminalWindow({
+  title = "terminalhire :: recruiter-mode",
+  zIndex,
+  defaultPosition,
+  onFocus,
+  onMinimize,
+  onClose,
+}) {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -263,7 +244,12 @@ export default function TerminalWindow() {
 
   return (
     <Window
-      title="terminalhire :: recruiter-mode"
+      title={title}
+      zIndex={zIndex}
+      defaultPosition={defaultPosition}
+      onFocus={onFocus}
+      onMinimize={onMinimize}
+      onClose={onClose}
       headerActions={
         <>
           <button
@@ -292,7 +278,29 @@ export default function TerminalWindow() {
               </div>
 
               <div className="space-y-3">
-                <h1 className="text-4xl md:text-5xl font-semibold tracking-tight">
+                <div className="h-44 md:h-48 overflow-hidden rounded-2xl border border-cyan-300/15 bg-black/20">
+                  <ParticleText
+                    text="WELCOME"
+                    particleSize={2.4}
+                    density={3}
+                    color="#f8fafc"
+                    highlightColor="#67e8f9"
+                    scatter={70}
+                    gatherDuration={700}
+                    stagger={220}
+                    pointerRepel={0}
+                    repelRadius={0}
+                    idleDrift={0.2}
+                    trigger="mount"
+                    fontSize="clamp(2.8rem, 6vw, 4.2rem)"
+                    fontWeight={700}
+                    fontFamily="Inter, system-ui, sans-serif"
+                    glow
+                    className="w-full h-full"
+                  />
+                </div>
+
+                <h1 className="text-2xl md:text-4xl font-semibold tracking-tight">
                   Ask the candidate,
                   <br />
                   <span className="text-cyan-300">not just the resume.</span>
