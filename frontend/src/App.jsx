@@ -46,7 +46,7 @@ const defaultWindows = {
     title: "terminalhire :: recruiter-mode",
     kind: "terminal",
     href: "",
-    isOpen: true,
+    isOpen: false,
     minimized: false,
     z: 40,
     position: { x: 320, y: 88 },

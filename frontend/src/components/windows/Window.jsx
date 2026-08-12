@@ -60,7 +60,7 @@ export default function Window({
 
   return (
     <div
-      className={`absolute rounded-[28px] border border-white/10 bg-white/[0.06] backdrop-blur-2xl shadow-[0_20px_80px_rgba(0,0,0,0.45)] overflow-hidden flex flex-col ${
+      className={`pointer-events-auto absolute rounded-[28px] border border-white/10 bg-white/[0.06] backdrop-blur-2xl shadow-[0_20px_80px_rgba(0,0,0,0.45)] overflow-hidden flex flex-col ${
         maximized ? "inset-3 md:inset-5" : "w-[min(1120px,calc(100vw-2rem))] h-[min(82vh,820px)]"
       } ${className}`.trim()}
       style={
