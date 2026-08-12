@@ -17,6 +17,9 @@ frontend/node_modules/
 frontend/dist/
 frontend/.vite/
 
+frontend/package-lock.json
+frontend/package.json
+
 # =========================
 # Environment files
 # =========================
@@ -46,3 +49,5 @@ exports/
 # =========================
 data/resumes/*.pdf
 data/resumes/*.docx
+
+.github/

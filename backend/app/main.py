@@ -42,4 +42,4 @@ async def fast_answer(q: str):
     answer = get_fast_answer(q)
     return {"answer": answer}
 
-app.include_router(chat_router, prefix="/api", tags=["chat"])
+app.include_router(chat_router, tags=["chat"])
