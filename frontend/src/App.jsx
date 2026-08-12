@@ -10,9 +10,10 @@ import {
   Copy,
   Sparkles,
   CheckCircle2,
-  Terminal,
   Code2,
   UserRound,
+  RotateCcw,
+  Trash2,
 } from "lucide-react";
 
 const desktopItems = [
@@ -46,11 +47,32 @@ const quickPrompts = [
   "Explain PacketSentry in detail",
 ];
 
-function Message({ role, content }) {
+const nowTime = () =>
+  new Date().toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
+const projectChips = [
+  "PacketSentry",
+  "PharmaGuard",
+  "NyaySetu",
+  "FlickMate",
+  "Portfolio Website",
+];
+
+function Message({
+  role,
+  content,
+  time,
+  source,
+  onProjectClick,
+  onRegenerate,
+}) {
   const copy = () => navigator.clipboard.writeText(content);
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-3 message-enter">
       <div
         className={clsx(
           "text-xs font-semibold uppercase tracking-[0.2em]",
@@ -61,23 +83,73 @@ function Message({ role, content }) {
       </div>
 
       <div className="group relative rounded-2xl border border-white/8 bg-white/[0.03] px-5 py-4 shadow-[0_0_0_1px_rgba(255,255,255,0.02)]">
-        {role === "assistant" && content && (
-          <button
-            onClick={copy}
-            className="absolute right-3 top-3 opacity-0 group-hover:opacity-100 transition-opacity text-white/50 hover:text-white"
-            aria-label="Copy response"
-          >
-            <Copy size={16} />
-          </button>
-        )}
+        <div className="mb-3 flex items-center justify-between text-xs">
+          <div className="flex items-center gap-2">
+            <span className="text-white/45">{time}</span>
+
+            {source === "fast-answer" && (
+              <span className="rounded-full bg-emerald-400/10 text-emerald-300 px-2 py-0.5 border border-emerald-400/20">
+                Fast answer
+              </span>
+            )}
+
+            {source === "llm" && role === "assistant" && (
+              <span className="rounded-full bg-cyan-400/10 text-cyan-300 px-2 py-0.5 border border-cyan-400/20">
+                LLM
+              </span>
+            )}
+          </div>
+
+          <div className="flex items-center gap-2">
+            {role === "assistant" && (
+              <button
+                onClick={onRegenerate}
+                className="text-white/40 hover:text-white transition-colors"
+                aria-label="Regenerate response"
+              >
+                <RotateCcw size={16} />
+              </button>
+            )}
+
+            {role === "assistant" && content && (
+              <button
+                onClick={copy}
+                className="text-white/40 hover:text-white transition-colors"
+                aria-label="Copy response"
+              >
+                <Copy size={16} />
+              </button>
+            )}
+          </div>
+        </div>
 
         {role === "assistant" ? (
           <div className="prose prose-invert prose-sm max-w-none prose-headings:text-white prose-p:text-white/90 prose-li:text-white/90 prose-strong:text-white prose-code:text-cyan-200 prose-code:bg-cyan-400/10 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-pre:bg-black/40 prose-pre:border prose-pre:border-white/10">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
+
+            {content && (
+              <span className="inline-block w-2 h-5 ml-1 align-middle bg-cyan-300 animate-pulse rounded-sm" />
+            )}
           </div>
         ) : (
           <div className="whitespace-pre-wrap leading-7 text-white/90 text-[15px]">
             {content}
+          </div>
+        )}
+
+        {role === "assistant" && (
+          <div className="mt-4 flex flex-wrap gap-2">
+            {projectChips
+              .filter((p) => content.toLowerCase().includes(p.toLowerCase()))
+              .map((p) => (
+                <button
+                  key={p}
+                  onClick={() => onProjectClick?.(p)}
+                  className="rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-1 text-xs text-cyan-200 hover:bg-cyan-400/20 transition-colors"
+                >
+                  {p}
+                </button>
+              ))}
           </div>
         )}
       </div>
@@ -108,8 +180,13 @@ export default function App() {
   const sendMessage = async (preset) => {
     const text = (preset ?? input).trim();
     if (!text || loading) return;
-
-    const userMessage = { role: "user", content: text };
+    
+    const userMessage = {
+      role: "user",
+      content: text,
+      time: nowTime(),
+      source: "recruiter",
+    };
     const history = [...messages, userMessage];
 
     setMessages(history);
@@ -130,7 +207,15 @@ export default function App() {
       setStage(stages[stageIndex]);
     }, 1200);
 
-    setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
+    setMessages((prev) => [
+      ...prev,
+      {
+        role: "assistant",
+        content: "",
+        time: nowTime(),
+        source: "llm",
+      },
+    ]);
 
     try {
       const response = await fetch("http://127.0.0.1:8000/api/chat/stream", {
@@ -159,7 +244,7 @@ export default function App() {
         setMessages((prev) => {
           const updated = [...prev];
           updated[updated.length - 1] = {
-            role: "assistant",
+            ...updated[updated.length - 1],
             content: fullText,
           };
           return updated;
@@ -235,9 +320,19 @@ export default function App() {
               </span>
             </div>
 
-            <div className="flex items-center gap-2 text-xs text-cyan-300/90 font-medium">
-              <Sparkles size={14} />
-              LIVE
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setMessages([])}
+                className="text-xs text-white/50 hover:text-white transition-colors flex items-center gap-1"
+              >
+                <Trash2 size={14} />
+                Clear
+              </button>
+
+              <div className="flex items-center gap-2 text-xs text-cyan-300/90 font-medium">
+                <Sparkles size={14} />
+                LIVE
+              </div>
             </div>
           </div>
 
@@ -280,7 +375,20 @@ export default function App() {
             ) : (
               <>
                 {messages.map((msg, idx) => (
-                  <Message key={idx} role={msg.role} content={msg.content} />
+                  <Message
+                    key={idx}
+                    role={msg.role}
+                    content={msg.content}
+                    time={msg.time}
+                    source={msg.source}
+                    onProjectClick={(text) => sendMessage(text)}
+                    onRegenerate={() => {
+                      const lastUser = [...messages]
+                        .reverse()
+                        .find((m) => m.role === "user");
+                      if (lastUser) sendMessage(lastUser.content);
+                    }}
+                  />
                 ))}
 
                 {loading && (
