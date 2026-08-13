@@ -2,44 +2,185 @@
 
 **Ask the candidate, not just the resume.**
 
-*TerminalHire* is **Mrudul’s AI Representative** for HR recruiters and interviewers that allows them to interact with a candidate through a conversational interface.
+*TerminalHire* is **Mrudul Bokade’s AI Representative** — an interactive recruiter-facing desktop environment that lets HR recruiters and interviewers explore a candidate beyond a traditional resume.
 
-Instead of scanning a resume, users can ask questions about the candidate's projects, skills, experience, strengths, career goals, and role fit.
+Instead of simply reading a CV, recruiters can open a simulated desktop, explore candidate resources, and interact with an AI-powered terminal to ask about Mrudul’s projects, skills, experience, strengths, career direction, and role fit.
 
 ---
 
-## Current Features
+## ✨ Current Features
 
-- 🤖 Groq-powered AI chat (`llama-3.3-70b-versatile`)
-- 🧠 Conversation memory
-- 🧾 Structured candidate knowledge base
-- 🛡️ Anti-hallucination guardrails
-- 👔 Recruiter-aware third-person responses
-- ⚡ Fast answers for common interview questions
-- 📂 Project-aware technical explanations
-- 🔌 FastAPI backend with modular architecture
+### 🤖 AI Recruiter Assistant
+- Groq-powered LLM integration using `llama-3.3-70b-versatile`
+- Recruiter-aware third-person responses
+- Strict candidate-data grounding
+- Anti-hallucination constraints
+- Fast-answer layer for common recruiter questions
+- Project-aware technical explanations
+
+### 🧠 Candidate Intelligence
+- Structured JSON-based candidate knowledge base
+- Candidate profile and education data
+- Technical skills and proficiency levels
+- Project information and technical challenges
+- Personality and SWOC data
+- Interview-oriented answers
+- Conversation history / contextual follow-up questions
+
+### ⚡ Streaming Chat
+- Real-time streamed LLM responses
+- Markdown rendering
+- Quick recruiter prompts
+- Copy responses
+- Regenerate responses
+- Clear conversation
+- Intelligent loading / response states
+
+### 🖥️ Interactive Desktop Environment
+- macOS-inspired desktop interface
+- Draggable application windows
+- Window focus and z-index management
+- Minimize / restore / close controls
+- Centered window positioning
+- Functional desktop shortcuts
+- Floating interactive dock
+- Real-time system clock
+- Recruiter-mode TerminalHire application
+
+### ✨ Interactive Visual System
+- React Bits `ParticleText`
+- React Bits `GradientWaves`
+- React Bits `SpecularButton`
+- Animated candidate identity
+- Interactive particle hover effect
+- Animated desktop wallpaper
+- Glassmorphism-inspired UI
+- Smooth window and dock interactions
+
+### 🔗 Candidate Resources
+- Resume
+- Portfolio
+- GitHub
+- LinkedIn
+- External resource windows
 
 ---
 
 ## 🏗️ Tech Stack
 
 ### Frontend
+
 - React
 - Vite
 - Tailwind CSS
+- React Markdown
+- Remark GFM
+- Lucide React
+- OGL
+- React Bits components
 
 ### Backend
+
+- Python
 - FastAPI
 - Pydantic
 - Groq API
+- Streaming responses
 
 ### Data Layer
+
 - JSON-based candidate memory
-- Structured profile, project, personality, and interview datasets
+- Structured profile data
+- Project knowledge base
+- Personality and SWOC datasets
+- Interview answers
+- Prompt-engineered candidate context
 
 ---
 
-## Example Questions
+## 🧠 Architecture
+
+```text
+                         ┌──────────────────────┐
+                         │      Recruiter       │
+                         └──────────┬───────────┘
+                                    │
+                                    ▼
+                         ┌──────────────────────┐
+                         │   TerminalHire UI    │
+                         │ React + Vite +       │
+                         │ Tailwind             │
+                         └──────────┬───────────┘
+                                    │
+                        ┌───────────┴───────────┐
+                        │                       │
+                        ▼                       ▼
+                Fast Answers             Streaming Chat
+                        │                       │
+                        └───────────┬───────────┘
+                                    ▼
+                         ┌──────────────────────┐
+                         │   Prompt Builder     │
+                         └──────────┬───────────┘
+                                    ▼
+                         ┌──────────────────────┐
+                         │ Structured Candidate │
+                         │       Data           │
+                         └──────────┬───────────┘
+                                    ▼
+                         ┌──────────────────────┐
+                         │      Groq LLM        │
+                         │ Llama 3.3 70B        │
+                         └──────────┬───────────┘
+                                    ▼
+                         ┌──────────────────────┐
+                         │ Recruiter-facing     │
+                         │ streamed response    │
+                         └──────────────────────┘
+
+```
+--- 
+
+## 📁 Project Structure
+
+```text
+
+TerminalHire/
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── desktop/
+│   │   │   ├── dock/
+│   │   │   ├── terminal/
+│   │   │   ├── ui/
+│   │   │   └── windows/
+│   │   ├── App.jsx
+│   │   └── ...
+│   └── package.json
+│
+├── backend/
+│   ├── app/
+│   │   ├── models/
+│   │   ├── routes/
+│   │   ├── services/
+│   │   └── prompts/
+│   └── requirements.txt
+│
+├── data/
+│   ├── profile.json
+│   ├── projects.json
+│   ├── personality.json
+│   ├── swoc.json
+│   ├── constraints.json
+│   └── interview_answers.json
+│
+│
+└── README.md
+
+```
+---
+
+## 💬 Example Recruiter Questions
 
 - Tell me about this candidate
 - What are his strongest projects?
@@ -50,48 +191,54 @@ Instead of scanning a resume, users can ask questions about the candidate's proj
 
 ---
 
-## 📁 Project Structure
+## 🎨 Design Philosophy
+
+TerminalHire is intentionally designed as more than a conventional portfolio.
+
+The interface combines:
 
 ```text
-TerminalHire/
-├── frontend/        # React + Tailwind UI
-├── backend/         # FastAPI API and AI engine
-├── data/            # Structured candidate datasets
-└── README.md
+                Professional Desktop
+                        +
+                Developer Terminal
+                        +
+                AI Recruiter Assistant
+                        +
+                Interactive Candidate Profile
+
 ```
+The goal is to make the recruiter feel like they are exploring the candidate’s professional environment, rather than reading another static portfolio.
 
 ---
 
-## 🧠 Architecture
+## 🚧 Roadmap
 
-```text
-User
-  ↓
-Fast-answer layer
-  ↓
-Prompt builder
-  ↓
-Structured candidate data
-  ↓
-Groq LLM
-  ↓
-Recruiter-facing response
-```
+Upcoming features include:
 
----
-
-## 🚧 In Progress
-
-- Streaming responses
-- Desktop + terminal-style UI
-- Job description matching
-- Resume upload and parsing
+- Job Description upload (PDF / DOCX)
+- Job-description suitability scoring
+- Skill-gap analysis
+- Recruiter recommendation
+- Resume upload and dynamic parsing
 - Interview question generation
-- Chat export to PDF
-- Mobile optimization
+- Recruiter interview mode
+- Conversation / analysis export to PDF
+- Expanded terminal command system
+- Additional candidate application windows
+- Further mobile and performance optimization
 
 ---
 
 ## 📌 Status
 
-**Active development — backend AI engine is functional and integrated with Groq. Frontend is currently in development.**
+Active development
+
+The core AI backend, streaming chat system, structured candidate knowledge base, and interactive desktop frontend are currently functional.
+
+The project is being developed incrementally with a focus on:
+
+- clean architecture
+- maintainable component design
+- real recruiter utility
+- performance
+- polished interaction design
