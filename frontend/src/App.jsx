@@ -49,7 +49,7 @@ const defaultWindows = {
     isOpen: false,
     minimized: false,
     z: 40,
-    position: { x: 320, y: 88 },
+    position: { center: true, y: 36 },
   },
   resume: {
     id: "resume",
@@ -58,8 +58,8 @@ const defaultWindows = {
     href: "https://drive.google.com/file/d/1klRUfr8mcAEAr4ZkwcXFO_30c1zcKEKP/view?pli=1",
     isOpen: false,
     minimized: true,
-    z: 20,
-    position: { x: 140, y: 110 },
+    z: 40,
+    position: { center: true, y: 36 },
   },
   portfolio: {
     id: "portfolio",
@@ -68,8 +68,8 @@ const defaultWindows = {
     href: "https://mrudul.dev",
     isOpen: false,
     minimized: true,
-    z: 21,
-    position: { x: 180, y: 130 },
+    z: 40,
+    position: { center: true, y: 36 },
   },
   github: {
     id: "github",
@@ -78,8 +78,8 @@ const defaultWindows = {
     href: "https://github.com/matrix-1407",
     isOpen: false,
     minimized: true,
-    z: 22,
-    position: { x: 220, y: 150 },
+    z: 40,
+    position: { center: true, y: 36 },
   },
   linkedin: {
     id: "linkedin",
@@ -88,8 +88,8 @@ const defaultWindows = {
     href: "https://www.linkedin.com/in/mrudul-bokade-140705mb",
     isOpen: false,
     minimized: true,
-    z: 23,
-    position: { x: 260, y: 170 },
+    z: 40,
+    position: { center: true, y: 36 },
   },
 };
 

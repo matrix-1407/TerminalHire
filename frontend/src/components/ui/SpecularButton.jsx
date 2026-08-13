@@ -81,6 +81,7 @@ const SpecularButton = ({
   proximity = 250,
   autoAnimate = false,
   disabled = false,
+  ariaLabel,
   onClick,
   className = "",
   type = "button",
@@ -213,6 +214,7 @@ const SpecularButton = ({
       ref={btnRef}
       type={type}
       disabled={disabled}
+      aria-label={ariaLabel}
       onClick={onClick}
       className={`specular-button specular-button--${size}${className ? ` ${className}` : ""}`}
       style={{

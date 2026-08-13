@@ -22,7 +22,7 @@ export default function MenuBar({ menuItems = [], onMenuAction }) {
   }, []);
 
   return (
-    <div className="h-12 border-b border-white/10 bg-slate-950/70 backdrop-blur-xl flex items-center justify-between px-4">
+    <div className="relative z-30 h-12 border-b border-white/10 bg-slate-950/70 backdrop-blur-xl flex items-center justify-between px-4">
       <div className="flex items-center gap-4">
         <span className="text-white/90 text-base leading-none" aria-hidden="true">
           ●

@@ -1,22 +1,52 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+
+const resolvePosition = (position) => {
+  if (!position?.center || typeof window === "undefined") {
+    return {
+      x: position?.x ?? 280,
+      y: position?.y ?? 64,
+    };
+  }
+
+  const windowWidth = Math.min(1120, window.innerWidth - 32);
+
+  return {
+    x: Math.max(8, Math.round((window.innerWidth - windowWidth) / 2)),
+    y: Math.max(36, position.y ?? 36),
+  };
+};
 
 export default function Window({
   title,
   headerActions,
   children,
   className = "",
-  zIndex = 30,
-  defaultPosition = { x: 280, y: 96 },
+  zIndex = 40,
+  defaultPosition = { x: 280, y: 64 },
   onFocus,
   onMinimize,
   onClose,
 }) {
-  const [position, setPosition] = useState(defaultPosition);
+  const [position, setPosition] = useState(() => resolvePosition(defaultPosition));
   const [maximized, setMaximized] = useState(false);
   const dragRef = useRef({ active: false, offsetX: 0, offsetY: 0 });
 
+  useLayoutEffect(() => {
+    setPosition(resolvePosition(defaultPosition));
+  }, [defaultPosition]);
+
   useEffect(() => {
-    setPosition(defaultPosition);
+    if (!defaultPosition?.center) return undefined;
+
+    const handleResize = () => {
+      setPosition(resolvePosition(defaultPosition));
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
   }, [defaultPosition]);
 
   useEffect(() => {
@@ -45,7 +75,7 @@ export default function Window({
     if (maximized) return;
 
     const target = event.target;
-    if (target instanceof Element && target.closest("button, a")) {
+    if (target instanceof Element && target.closest("button, a, input, textarea, select, [contenteditable='true'], [data-no-drag]")) {
       return;
     }
 
@@ -61,7 +91,7 @@ export default function Window({
   return (
     <div
       className={`pointer-events-auto absolute rounded-[28px] border border-white/10 bg-white/[0.06] backdrop-blur-2xl shadow-[0_20px_80px_rgba(0,0,0,0.45)] overflow-hidden flex flex-col ${
-        maximized ? "inset-3 md:inset-5" : "w-[min(1120px,calc(100vw-2rem))] h-[min(82vh,820px)]"
+        maximized ? "inset-3 md:inset-5" : "w-[min(1120px,calc(100vw-2rem))] h-[min(80vh,800px)]"
       } ${className}`.trim()}
       style={
         maximized
