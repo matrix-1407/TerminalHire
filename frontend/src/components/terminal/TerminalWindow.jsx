@@ -32,13 +32,110 @@ const nowTime = () =>
     minute: "2-digit",
   });
 
-const projectChips = [
-  "PacketSentry",
-  "PharmaGuard",
-  "NyaySetu",
-  "FlickMate",
-  "Portfolio Website",
-];
+
+function getSuggestions({ type, content = "", analysis }) {
+  // JD analysis suggestions
+  if (type === "jd-analysis") {
+    const score = analysis?.score ?? 0;
+
+    if (score >= 80) {
+      return [
+        "Generate a technical interview pack",
+        "What makes this a strong fit?",
+        "Write a recruiter decision summary",
+      ];
+    }
+
+    if (score >= 60) {
+      return [
+        "Why is the score not higher?",
+        "What should improve in 30 days?",
+        "Should a recruiter still interview him?",
+      ];
+    }
+
+    return [
+      "What are the biggest gaps?",
+      "Create a learning roadmap",
+      "Which project is most relevant?",
+    ];
+  }
+
+  const text = content.toLowerCase();
+
+  // PacketSentry / networking
+  if (
+    text.includes("packetsentry") &&
+    (text.includes("dpi") ||
+      text.includes("network") ||
+      text.includes("traffic") ||
+      text.includes("pcap"))
+  ) {
+    return [
+      "Explain PacketSentry architecture",
+      "Ask a networking interview question",
+      "Compare it with a cloud-security role",
+    ];
+  }
+
+  // Cloud / deployment
+  if (
+    text.includes("aws") ||
+    text.includes("docker") ||
+    text.includes("kubernetes") ||
+    text.includes("deployment")
+  ) {
+    return [
+      "Check cloud gaps for this role",
+      "Ask a deployment interview question",
+      "Generate a production scenario question",
+    ];
+  }
+
+  // Backend / API
+  if (
+    text.includes("fastapi") ||
+    text.includes("api") ||
+    text.includes("backend") ||
+    text.includes("rest")
+  ) {
+    return [
+      "Explain API design choices",
+      "Ask a backend interview question",
+      "What scalability concerns exist?",
+    ];
+  }
+
+  // AI / RAG
+  if (
+    text.includes("rag") ||
+    text.includes("llm") ||
+    text.includes("ai") ||
+    text.includes("vector")
+  ) {
+    return [
+      "Explain the RAG pipeline",
+      "Ask an AI interview question",
+      "What are the hallucination risks?",
+    ];
+  }
+
+  // Scoring / fit
+  if (text.includes("score") || text.includes("fit")) {
+    return [
+      "Why not 100?",
+      "What is the strongest project?",
+      "Should a recruiter still interview him?",
+    ];
+  }
+
+  // Default fallback
+  return [
+    "Explain this in simpler terms",
+    "Give a recruiter-focused summary",
+    "What should I ask next?",
+  ];
+}
 
 function Message({
   role,
@@ -48,6 +145,7 @@ function Message({
   type,
   analysis,
   onProjectClick,
+  onSuggestionClick,
   onRegenerate,
   onJDAction,
 }) {
@@ -80,6 +178,11 @@ function Message({
       </div>
     );
   }
+
+const suggestions =
+  role === 'assistant'
+    ? getSuggestions({ type, content, analysis })
+    : [];
 
   if (type === "system") {
     return (
@@ -174,22 +277,29 @@ function Message({
             {content}
           </div>
         )}
-
-        {role === "assistant" && (
-          <div className="mt-4 flex flex-wrap gap-2">
-            {projectChips
-              .filter((p) => content.toLowerCase().includes(p.toLowerCase()))
-              .map((p) => (
+        
+        {role === 'assistant' && suggestions.length > 0 && (
+          <div className="mt-4">
+            <div className="mb-2 text-[11px] uppercase tracking-[0.18em] text-white/35">
+              Suggested follow-ups
+            </div>
+        
+            <div className="flex flex-wrap gap-2">
+              {suggestions.map((s) => (
                 <button
-                  key={p}
-                  onClick={() => onProjectClick?.(p)}
-                  className="rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-1 text-xs text-cyan-200 hover:bg-cyan-400/20 transition-colors"
+                  key={s}
+                  type="button"
+                  onClick={() => onSuggestionClick?.(s)}
+                  className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-cyan-200 transition hover:bg-cyan-400/10         hover:border-cyan-300/30 hover:text-cyan-100"
                 >
-                  {p}
+                  {s}
                 </button>
               ))}
+            </div>
           </div>
         )}
+
+        
       </div>
     </div>
   );
@@ -573,6 +683,7 @@ export default function TerminalWindow({
                 analysis={msg.analysis}
                 onProjectClick={(text) => sendMessage(text)}
                 onJDAction={handleJDAction}
+                onSuggestionClick={(prompt) => sendMessage(prompt)}
                 onRegenerate={() => {
                   const lastUser = [...messages]
                     .reverse()
