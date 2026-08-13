@@ -14,6 +14,9 @@ import {
 
 import Window from "../windows/Window";
 import ParticleText from "../ui/ParticleText";
+import JDUploadButton from "./JDUploadButton";
+import JDResultCard from "./JDResultCard";
+import useJDUpload from "./useJDUpload";
 
 const quickPrompts = [
   "Tell me about the candidate",
@@ -42,9 +45,58 @@ function Message({
   content,
   time,
   source,
+  type,
+  analysis,
   onProjectClick,
   onRegenerate,
+  onJDAction,
 }) {
+
+  const [expanded, setExpanded] = useState(false);
+
+  const MAX_PREVIEW = 1200;
+
+  const isLong =
+    role === 'assistant' &&
+    type !== 'jd-analysis' &&
+    typeof content === 'string' &&
+    content.length > MAX_PREVIEW;
+
+  const displayContent =
+    isLong && !expanded
+      ? content.slice(0, MAX_PREVIEW)
+      : content;
+
+  if (type === "jd-analysis") {
+    return (
+      <div className="space-y-3 message-enter">
+        <div className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-300">
+          terminalhire :: jd-analysis
+        </div>
+        <JDResultCard 
+          analysis={analysis} 
+          onAction={onJDAction}
+        />
+      </div>
+    );
+  }
+
+  if (type === "system") {
+    return (
+      <div className="rounded-2xl border border-cyan-300/15 bg-cyan-300/[0.06] px-4 py-3 text-sm text-cyan-100 message-enter">
+        {content}
+      </div>
+    );
+  }
+
+  if (type === "error") {
+    return (
+      <div className="rounded-2xl border border-red-300/20 bg-red-300/[0.08] px-4 py-3 text-sm text-red-100 message-enter">
+        {content}
+      </div>
+    );
+  }
+
   const copy = () => navigator.clipboard.writeText(content);
 
   return (
@@ -100,9 +152,19 @@ function Message({
         </div>
 
         {role === "assistant" ? (
-          <div className="prose prose-invert prose-sm max-w-none prose-headings:text-white prose-p:text-white/90 prose-li:text-white/90 prose-strong:text-white prose-code:text-cyan-200 prose-code:bg-cyan-400/10 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-pre:bg-black/40 prose-pre:border prose-pre:border-white/10">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
+          <div className={`prose prose-invert prose-sm max-w-none prose-headings:text-white prose-p:text-white/90 prose-li:text-white/90 prose-strong:text-white prose-code:text-cyan-200 prose-code:bg-cyan-400/10 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-pre:bg-black/40 prose-pre:border prose-pre:border-white/10 transition-all duration-300 ${isLong && !expanded ? 'max-h-[28rem] overflow-hidden' : ''} `} >
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>{displayContent}</ReactMarkdown>
 
+            {isLong && (
+             <button
+               type="button"
+               onClick={() => setExpanded((v) => !v)}
+               className="mt-4 inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-cyan-200 transition hover:bg-white/10 hover:text-cyan-100"
+              >
+               {expanded ? 'Show less' : 'Show more'}
+             </button>
+            )}
+            
             {content && (
               <span className="inline-block w-2 h-5 ml-1 align-middle bg-cyan-300 animate-pulse rounded-sm" />
             )}
@@ -145,9 +207,41 @@ export default function TerminalWindow({
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [stage, setStage] = useState("");
+  const [dragActive, setDragActive] = useState(false);
+  const dragDepth = useRef(0);
 
   const bottomRef = useRef(null);
   const textareaRef = useRef(null);
+
+  const pushSystemMessage = (content, type = "system") => {
+    setMessages((prev) => [
+      ...prev,
+      {
+        role: "assistant",
+        content,
+        time: nowTime(),
+        source: "jd-upload",
+        type,
+      },
+    ]);
+  };
+
+  const { uploading, progress, analyzeFile } = useJDUpload({
+    onComplete: (analysis) => {
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content: "",
+          time: nowTime(),
+          source: "jd-analysis",
+          type: "jd-analysis",
+          analysis,
+        },
+      ]);
+    },
+    onError: (message) => pushSystemMessage(message, "error"),
+  });
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -162,17 +256,23 @@ export default function TerminalWindow({
 
   const sendMessage = async (preset) => {
     const text = (preset ?? input).trim();
+    const visibleText = preset ? null : text;
     if (!text || loading) return;
 
-    const userMessage = {
-      role: "user",
-      content: text,
-      time: nowTime(),
-      source: "recruiter",
-    };
-    const history = [...messages, userMessage];
-
-    setMessages(history);
+      const userMessage = visibleText
+          ? {
+              role: 'user',
+              content: visibleText,
+              time: nowTime(),
+              source: 'recruiter',
+            }
+          : null;
+          
+        const history = userMessage ? [...messages, userMessage] : messages;
+          
+        if (userMessage) {
+          setMessages(history);
+      }
     setInput("");
     setLoading(true);
 
@@ -240,7 +340,122 @@ export default function TerminalWindow({
     }
   };
 
+  const buildJDPrompt = (action, result) => {
+      const context = `
+    Job Title: ${result.job_title}
+    Score: ${result.score}
+    Fit: ${result.fit}
+    Matched Skills: ${result.matched_skills.join(', ')}
+    Missing Skills: ${result.missing_skills.join(', ')}
+    Relevant Projects: ${result.relevant_projects.map(p => p.name).join(', ')}
+    Summary: ${result.summary}
+    Recommendation: ${result.recommendation}
+      `;
+
+      switch (action) {
+        case 'why_score':
+          return `Explain in recruiter terms why this candidate received a ${result.score}/100 score for this JD. Break down skills, projects, and experience.
+
+    ${context}`;
+
+        case 'improve':
+          return `Tell the candidate exactly what to improve in the next 30 days to become a stronger match for this role. Prioritize the highest-impact skills first.
+
+    ${context}`;
+
+        case 'strongest_project':
+          return `Identify the single strongest project for this JD and explain why it is the best match, what technologies overlap, and what interview points a recruiter should explore.
+
+    ${context}`;
+
+        case 'interview_questions':
+          return `Generate a concise recruiter-ready interview pack for this JD.
+
+        Requirements:
+        - 3 technical questions
+        - 2 behavioral questions
+        - For each question, give only 1-2 bullets describing what a strong answer should include.
+        - Keep the entire response under 250 words.
+
+    ${context}`;
+
+        case 'compare':
+          return `Provide a detailed resume-vs-JD comparison with sections: Strong match, Partial match, Missing skills, Project alignment, Cloud alignment, Security/networking alignment, and Final hiring assessment.
+
+    ${context}`;
+
+        default:
+          return `Analyze this JD match.
+
+    ${context}`;
+      }
+  };
+
+  const handleJDAction = async (action, result) => {
+    const prompt = buildJDPrompt(action, result);
+
+    const labels = {
+      why_score: 'Why this score?',
+      improve: 'What should improve?',
+      strongest_project: 'Which project is the strongest match?',
+      interview_questions: 'Generate interview questions for this JD',
+      compare: 'Compare resume vs JD in detail',
+    };
+
+    setMessages((prev) => [
+      ...prev,
+      {
+        role: 'user',
+        content: labels[action] || 'Analyze this JD',
+        time: nowTime(),
+        source: 'recruiter',
+      },
+    ]);
+
+    await sendMessage(prompt);
+  };
+
   const hasMessages = messages.length > 0;
+
+  const handleFile = (file) => {
+    if (!file || uploading) return;
+    pushSystemMessage(`Analyzing ${file.name} for candidate suitability...`);
+    analyzeFile(file);
+  };
+
+  const handleDragEnter = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    dragDepth.current += 1;
+    if (event.dataTransfer?.items?.length) {
+      setDragActive(true);
+    }
+  };
+
+  const handleDragOver = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    if (event.dataTransfer) {
+      event.dataTransfer.dropEffect = "copy";
+    }
+  };
+
+  const handleDragLeave = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    dragDepth.current = Math.max(0, dragDepth.current - 1);
+    if (dragDepth.current === 0) {
+      setDragActive(false);
+    }
+  };
+
+  const handleDrop = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    dragDepth.current = 0;
+    setDragActive(false);
+    handleFile(event.dataTransfer?.files?.[0]);
+  };
 
   return (
     <Window
@@ -268,6 +483,25 @@ export default function TerminalWindow({
         </>
       }
     >
+      <div
+        className={clsx(
+          "relative flex min-h-0 flex-1 flex-col overflow-hidden transition-colors duration-200",
+          dragActive && "bg-cyan-300/[0.04]"
+        )}
+        onDragEnter={handleDragEnter}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+      >
+        {dragActive && (
+          <div className="pointer-events-none absolute inset-3 z-20 flex items-center justify-center rounded-3xl border border-dashed border-cyan-300/60 bg-slate-950/70 text-center backdrop-blur-sm">
+            <div className="space-y-2 px-6">
+              <div className="text-lg font-semibold text-cyan-100">Drop JD to analyze</div>
+              <div className="text-sm text-white/60">PDF, DOCX, or TXT up to 5 MB</div>
+            </div>
+          </div>
+        )}
+
       <div className="flex-1 overflow-y-auto px-4 md:px-6 py-5 space-y-6 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
         {!hasMessages ? (
           <div className="h-full flex items-center justify-center">
@@ -291,7 +525,7 @@ export default function TerminalWindow({
                     pointerRepel={0}
                     repelRadius={0}
                     idleDrift={0.2}
-                    trigger="mount"
+                    trigger="hover"
                     fontSize="clamp(2.8rem, 6vw, 4.2rem)"
                     fontWeight={700}
                     fontFamily="Inter, system-ui, sans-serif"
@@ -335,7 +569,10 @@ export default function TerminalWindow({
                 content={msg.content}
                 time={msg.time}
                 source={msg.source}
+                type={msg.type}
+                analysis={msg.analysis}
                 onProjectClick={(text) => sendMessage(text)}
+                onJDAction={handleJDAction}
                 onRegenerate={() => {
                   const lastUser = [...messages]
                     .reverse()
@@ -367,6 +604,8 @@ export default function TerminalWindow({
       <div className="border-t border-white/10 bg-black/20 p-4">
         <div className="rounded-3xl border border-white/10 bg-black/30 px-4 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
           <div className="flex items-end gap-3">
+            <JDUploadButton onSelectFile={handleFile} disabled={uploading} />
+
             <textarea
               ref={textareaRef}
               value={input}
@@ -392,11 +631,21 @@ export default function TerminalWindow({
             </button>
           </div>
 
-          <div className="mt-3 flex items-center justify-between text-xs text-white/40">
-            <span>Enter to send • Shift+Enter for a new line</span>
-            <span>Groq • Llama 3.3 70B</span>
+          {uploading && (
+            <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/10" aria-label="JD analysis progress">
+              <div
+                className="h-full rounded-full bg-cyan-300 transition-all duration-300"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+          )}
+
+          <div className="mt-3 flex flex-col gap-1 text-xs text-white/40 sm:flex-row sm:items-center sm:justify-between">
+            <span>Enter to send - Shift+Enter for a new line - Drop a JD to analyze</span>
+            <span>{uploading ? "Analyzing JD..." : "Groq - Llama 3.3 70B"}</span>
           </div>
         </div>
+      </div>
       </div>
     </Window>
   );

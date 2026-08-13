@@ -6,6 +6,7 @@ from app.prompts.prompt_builder import build_system_prompt
 
 from app.services.fast_answers import get_fast_answer
 from app.routes.chat import router as chat_router
+from app.routes.jd import router as jd_router
 
 app = FastAPI(title="TerminalHire API")
 
@@ -43,3 +44,4 @@ async def fast_answer(q: str):
     return {"answer": answer}
 
 app.include_router(chat_router, tags=["chat"])
+app.include_router(jd_router, tags=["jd"])
