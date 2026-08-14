@@ -97,7 +97,7 @@ export default function Window({
 
   return (
     <div
-      className={`pointer-events-auto absolute top-0 left-0 rounded-2xl border border-white/[0.08] bg-[#0a0e17]/98 backdrop-blur-sm shadow-[0_25px_90px_rgba(0,0,0,0.65)] overflow-hidden flex flex-col select-none ${
+      className={`pointer-events-auto absolute top-0 left-0 rounded-2xl border border-white/[0.1] bg-[#0a0e17]/99 shadow-[0_25px_90px_rgba(0,0,0,0.75)] overflow-hidden flex flex-col select-none ${
         maximized ? "inset-3 md:inset-5 !transform-none" : "w-[min(1120px,calc(100vw-2rem))] h-[min(80vh,800px)]"
       } ${className}`.trim()}
       style={

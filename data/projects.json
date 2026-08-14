@@ -87,7 +87,7 @@
     {
       "name": "VectorDB",
       "category": "Vector Database & Local RAG Engine from Scratch",
-      "github": "https://github.com/matrix-1407/VectorDB",
+      "github": "https://github.com/matrix-1407/Own-LLM-VectorDB",
       "ownership": "Solo",
       "description": "A production-grade vector database engine built from scratch in Python with a live web UI, RAG pipeline, and three search algorithms (HNSW, KD-Tree, Brute Force) with zero cloud dependencies running 100% locally.",
       "technologies": [

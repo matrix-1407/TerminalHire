@@ -167,7 +167,7 @@ const GradientWaves = ({
       alpha: true,
       premultipliedAlpha: true,
       antialias: false,
-      dpr: 1.0,
+      dpr: 0.75,
     });
 
     const gl = renderer.gl;

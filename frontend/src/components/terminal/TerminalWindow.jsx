@@ -148,6 +148,7 @@ function TranscriptMessage({
   onSuggestionClick,
   onRegenerate,
   onJDAction,
+  onCommandClick,
 }) {
   const [expanded, setExpanded] = useState(false);
   const MAX_PREVIEW = 1200;
@@ -155,11 +156,50 @@ function TranscriptMessage({
   const isLong =
     role === "assistant" &&
     type !== "jd-analysis" &&
+    type !== "command-grid" &&
     typeof content === "string" &&
     content.length > MAX_PREVIEW;
 
   const displayContent =
     isLong && !expanded ? content.slice(0, MAX_PREVIEW) : content;
+
+  if (type === "command-grid") {
+    return (
+      <div className="space-y-3 py-2.5 message-enter font-mono">
+        <div className="flex items-center justify-between text-xs border-b border-cyan-500/20 pb-2 select-none">
+          <div className="flex items-center gap-2">
+            <span className="text-emerald-400 font-semibold">$ ask-me</span>
+            <span className="text-cyan-300 font-bold">--help</span>
+          </div>
+          <span className="text-white/30 text-[10px]">{time}</span>
+        </div>
+
+        <div className="space-y-2">
+          <div className="text-xs text-white/70">
+            Interactive Command Set — Click any command below to execute:
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {commandList.map((item) => (
+              <button
+                key={item.cmd}
+                type="button"
+                onClick={() => onCommandClick?.(item)}
+                className="flex items-center justify-between p-2.5 rounded-xl border border-white/10 bg-white/[0.04] hover:bg-cyan-950/50 hover:border-cyan-400/50 group text-left transition-all duration-150 cursor-pointer active:scale-98"
+              >
+                <span className="text-cyan-300 font-bold group-hover:text-cyan-200 text-xs">
+                  ${item.cmd}
+                </span>
+                <span className="text-white/50 text-[11px] group-hover:text-white/80 truncate ml-2">
+                  {item.desc}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (type === "jd-analysis") {
     return (
@@ -393,8 +433,42 @@ function TerminalWindow({
     const text = (preset ?? input).trim();
     if (!text || loading) return;
 
-    // Check if typed exact command
-    const matchedCmd = commandList.find((c) => c.cmd === text.toLowerCase());
+    const rawLower = text.toLowerCase().trim();
+    const normalized = rawLower.replace(/^\$/, '').replace(/^\//, '').replace(/\?$/, '').trim();
+
+    // Check if typed exact help command
+    const isExactHelp =
+      normalized === "help" ||
+      normalized === "commands" ||
+      rawLower === "help?" ||
+      rawLower === "$help?" ||
+      rawLower === "help me" ||
+      rawLower === "?" ||
+      rawLower === "$?" ||
+      rawLower === "$help" ||
+      rawLower === "/help";
+
+    if (isExactHelp) {
+      setInput("");
+      const userMsg = {
+        role: "user",
+        content: text,
+        time: nowTime(),
+        source: "recruiter",
+      };
+      const helpMsg = {
+        role: "assistant",
+        content: "TerminalHire OS — Interactive Command Set",
+        time: nowTime(),
+        source: "help-grid",
+        type: "command-grid",
+      };
+      setMessages((prev) => [...prev, userMsg, helpMsg]);
+      return;
+    }
+
+    // Check if typed exact command (with or without leading $ or /)
+    const matchedCmd = commandList.find((c) => c.cmd === normalized || c.cmd === text.toLowerCase());
     if (matchedCmd) {
       if (matchedCmd.action === "clear") {
         setMessages([]);
@@ -689,6 +763,7 @@ Recommendation: ${result.recommendation}
                 if (lastUser) sendMessage(lastUser.content);
               }}
               onJDAction={handleJDAction}
+              onCommandClick={handleCommandClick}
             />
           ))}
 

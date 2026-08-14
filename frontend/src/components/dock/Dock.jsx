@@ -2,7 +2,6 @@
 
 import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from 'motion/react';
 import { Children, cloneElement, useEffect, useMemo, useRef, useState } from 'react';
-import SpecularButton from '../ui/SpecularButton';
 
 import './Dock.css';
 
@@ -178,18 +177,12 @@ export default function Dock({
               isOpen={isOpen}
               isPrimary={isPrimary}
             >
-              <SpecularButton
-                radius={16}
-                tint={isPrimary ? "#38bdf8" : "#ffffff"}
-                tintOpacity={isPrimary ? 0.15 : 0.05}
-                lineColor={isPrimary ? "#7dd3fc" : "#e2e8f0"}
-                baseColor="#0f172a"
-                intensity={1.5}
-                proximity={220}
-                followMouse
-                autoAnimate={false}
-                ariaLabel={item.label}
-                className="w-full h-full !p-0 border-none bg-transparent flex items-center justify-center pointer-events-none"
+              <div
+                className={`w-full h-full rounded-xl flex items-center justify-center transition-all duration-200 border ${
+                  isPrimary
+                    ? "bg-cyan-950/70 border-cyan-400/40 group-hover:border-cyan-300 group-hover:bg-cyan-900/80 group-hover:shadow-[0_0_20px_rgba(34,211,238,0.3)]"
+                    : "bg-white/[0.06] border-white/10 group-hover:bg-white/[0.14] group-hover:border-cyan-400/40 group-hover:shadow-[0_0_15px_rgba(255,255,255,0.15)]"
+                }`}
               >
                 <DockIcon>
                   {isPrimary ? (
@@ -201,7 +194,7 @@ export default function Dock({
                     Icon && <Icon className="w-5 h-5 text-white/90 group-hover:text-white transition-colors" />
                   )}
                 </DockIcon>
-              </SpecularButton>
+              </div>
               <DockLabel>{item.label}</DockLabel>
             </DockItem>
           );

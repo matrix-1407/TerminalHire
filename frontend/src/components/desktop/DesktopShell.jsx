@@ -31,11 +31,11 @@ export default function DesktopShell({
           zoom={1.15}
           height={5.2}
           fogDepth={13}
-          detail="medium"
-          brightness={1.15}
-          opacity={0.7}
+          detail="low"
+          brightness={1.1}
+          opacity={0.65}
           mouseInteraction={false}
-          grain={true}
+          grain={false}
           grainIntensity={0.04}
           className="h-full w-full"
         />
