@@ -1,9 +1,10 @@
+import { memo } from "react";
 import Window from "./Window";
 import { GraduationCap, MapPin, Target, Sparkles, User, Briefcase } from "lucide-react";
 import profileData from "../../../../data/profile.json";
 import personalityData from "../../../../data/personality.json";
 
-export default function AboutMeWindow({
+function AboutMeWindow({
   title = "About Me",
   zIndex,
   defaultPosition,
@@ -104,3 +105,5 @@ export default function AboutMeWindow({
     </Window>
   );
 }
+
+export default memo(AboutMeWindow);

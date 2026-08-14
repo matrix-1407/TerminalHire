@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { ArrowUpRight, ShieldAlert } from "lucide-react";
 import Window from "./Window";
 
@@ -16,7 +17,7 @@ function canEmbed(url) {
   }
 }
 
-export default function ExternalWindow({
+function ExternalWindow({
   title,
   href,
   zIndex,
@@ -85,4 +86,6 @@ export default function ExternalWindow({
       </div>
     </Window>
   );
-}
+}
+
+export default memo(ExternalWindow);

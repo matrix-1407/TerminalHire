@@ -1,8 +1,9 @@
+import { memo } from "react";
 import Window from "./Window";
 import { Cpu, Server, Cloud, Shield, Network, Bot } from "lucide-react";
 import profileData from "../../../../data/profile.json";
 
-export default function SkillsWindow({
+function SkillsWindow({
   title = "Skills",
   zIndex,
   defaultPosition,
@@ -117,3 +118,5 @@ export default function SkillsWindow({
     </Window>
   );
 }
+
+export default memo(SkillsWindow);

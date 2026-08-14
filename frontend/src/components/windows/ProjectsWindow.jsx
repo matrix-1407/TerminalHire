@@ -1,8 +1,9 @@
+import { memo } from "react";
 import Window from "./Window";
 import { FolderGit2, ExternalLink, Code } from "lucide-react";
 import projectsData from "../../../../data/projects.json";
 
-export default function ProjectsWindow({
+function ProjectsWindow({
   title = "Projects",
   zIndex,
   defaultPosition,
@@ -77,3 +78,5 @@ export default function ProjectsWindow({
     </Window>
   );
 }
+
+export default memo(ProjectsWindow);

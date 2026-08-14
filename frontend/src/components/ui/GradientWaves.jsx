@@ -13,9 +13,9 @@ const hexToRgb = (hex) => {
 };
 
 const detailToSteps = (detail) => {
-  if (detail === "low") return 40.0;
-  if (detail === "high") return 110.0;
-  return 70.0;
+  if (detail === "low") return 25.0;
+  if (detail === "high") return 65.0;
+  return 40.0;
 };
 
 const vertex = `#version 300 es
@@ -167,7 +167,7 @@ const GradientWaves = ({
       alpha: true,
       premultipliedAlpha: true,
       antialias: false,
-      dpr: Math.min(window.devicePixelRatio || 1, 2),
+      dpr: 1.0,
     });
 
     const gl = renderer.gl;

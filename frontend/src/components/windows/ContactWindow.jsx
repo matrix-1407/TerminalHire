@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, memo } from "react";
 import Window from "./Window";
 import {
   Mail,
@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import profileData from "../../../../data/profile.json";
 
-export default function ContactWindow({
+function ContactWindow({
   title = "Contact",
   zIndex,
   defaultPosition,
@@ -187,3 +187,5 @@ export default function ContactWindow({
     </Window>
   );
 }
+
+export default memo(ContactWindow);

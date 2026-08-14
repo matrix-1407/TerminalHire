@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, memo } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import clsx from "clsx";
@@ -237,9 +237,46 @@ function TranscriptMessage({
       {/* Transcript Body */}
       <div className="pl-4 border-l border-white/[0.06] group">
         {role === "assistant" ? (
-          <div className="text-sm leading-relaxed text-white/90 font-sans">
-            <div className="prose prose-invert prose-sm max-w-none prose-headings:text-white prose-p:text-white/90 prose-li:text-white/90 prose-strong:text-white prose-code:text-cyan-200 prose-code:bg-cyan-950/60 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:font-mono prose-pre:bg-black/50 prose-pre:border prose-pre:border-white/10">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+          <>
+            <div className="text-sm leading-relaxed text-white/90 font-sans">
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                components={{
+                  h1: ({ node, ...props }) => (
+                    <h1 className="text-base sm:text-lg font-bold text-cyan-200 mt-4 mb-2 border-b border-cyan-500/20 pb-1" {...props} />
+                  ),
+                  h2: ({ node, ...props }) => (
+                    <h2 className="text-sm sm:text-base font-bold text-cyan-300 mt-3 mb-1.5" {...props} />
+                  ),
+                  h3: ({ node, ...props }) => (
+                    <h3 className="text-xs sm:text-sm font-bold text-cyan-400 uppercase tracking-wider mt-3 mb-1" {...props} />
+                  ),
+                  p: ({ node, ...props }) => (
+                    <p className="mb-2.5 text-white/95 leading-relaxed font-normal" {...props} />
+                  ),
+                  strong: ({ node, ...props }) => (
+                    <strong className="font-bold text-cyan-200" {...props} />
+                  ),
+                  ul: ({ node, ...props }) => (
+                    <ul className="list-disc list-outside pl-4 space-y-1.5 mb-3 text-white/90" {...props} />
+                  ),
+                  ol: ({ node, ...props }) => (
+                    <ol className="list-decimal list-outside pl-4 space-y-1.5 mb-3 text-white/90" {...props} />
+                  ),
+                  li: ({ node, ...props }) => (
+                    <li className="text-white/90 leading-relaxed" {...props} />
+                  ),
+                  a: ({ node, ...props }) => (
+                    <a className="text-cyan-300 font-semibold underline underline-offset-2 hover:text-cyan-200 transition-colors" target="_blank" rel="noreferrer" {...props} />
+                  ),
+                  code: ({ node, inline, ...props }) =>
+                    inline ? (
+                      <code className="font-mono text-[11px] bg-cyan-950/70 text-cyan-200 px-1.5 py-0.5 rounded border border-cyan-500/30" {...props} />
+                    ) : (
+                      <code className="block font-mono text-[11px] bg-slate-950/90 text-cyan-200 p-3 rounded-xl border border-white/10 my-2.5 overflow-x-auto" {...props} />
+                    ),
+                }}
+              >
                 {displayContent}
               </ReactMarkdown>
             </div>
@@ -256,7 +293,7 @@ function TranscriptMessage({
                 {expanded ? "↑ Show less" : "↓ Show more..."}
               </button>
             )}
-          </div>
+          </>
         ) : (
           <div className="font-mono text-sm text-cyan-100 whitespace-pre-wrap">
             {content}
@@ -283,7 +320,7 @@ function TranscriptMessage({
   );
 }
 
-export default function TerminalWindow({
+function TerminalWindow({
   title = "ask-me — recruiter session",
   zIndex,
   defaultPosition,
@@ -713,3 +750,5 @@ Recommendation: ${result.recommendation}
     </Window>
   );
 }
+
+export default memo(TerminalWindow);

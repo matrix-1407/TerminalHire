@@ -3,9 +3,20 @@ from groq import RateLimitError
 
 from app.services.groq_service import client, model
 from app.prompts.prompt_builder import build_system_prompt
+from app.services.fast_answers import get_fast_answer
 
 
 async def stream_response(message: str, history: list):
+    # Check fast answer first to save 100% Groq API tokens for known questions and preset commands!
+    fast = get_fast_answer(message)
+    if fast:
+        words = fast.split(" ")
+        for i in range(0, len(words), 3):
+            chunk = " ".join(words[i : i + 3]) + " "
+            yield chunk
+            await asyncio.sleep(0.012)
+        return
+
     system_prompt = build_system_prompt()
 
     messages = [
