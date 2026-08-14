@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState, memo } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import clsx from "clsx";
 
 import {
   Send,
@@ -680,10 +679,9 @@ Recommendation: ${result.recommendation}
       }
     >
       <div
-        className={clsx(
-          "relative flex min-h-0 flex-1 flex-col overflow-hidden bg-[#0a0d14]",
-          dragActive && "bg-cyan-950/40"
-        )}
+        className={`relative flex min-h-0 flex-1 flex-col overflow-hidden bg-[#0a0d14] ${
+          dragActive ? "bg-cyan-950/40" : ""
+        }`}
         onDragEnter={handleDragEnter}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
