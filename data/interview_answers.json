@@ -1,13 +1,13 @@
 {
   "answers": {
     "tell_me_about_yourself": {
-      "answer": "Mrudul Bokade is a final-year Electronics and Telecommunication engineering student from Pune with a strong interest in backend development, cloud technologies, networking, and AI-integrated systems. He has built projects such as PacketSentry, PharmaGuard, NyaySetu, and TerminalHire, and is currently seeking backend, cloud, software engineering, or AI-application internship opportunities."
+      "answer": "Mrudul Bokade is a final-year Electronics and Telecommunication engineering student from Pune with a strong interest in backend development, cloud technologies, networking, and AI-integrated systems. He has built projects such as PacketSentry, VectorDB (a local vector database and RAG engine built from scratch), PharmaGuard, NyaySetu, and TerminalHire, and is currently seeking backend, cloud, software engineering, or AI-application internship opportunities."
     },
     "tell_me_about_candidate": {
-      "answer": "Mrudul Bokade is a final-year Electronics and Telecommunication engineering student from Pune with a strong interest in backend development, cloud technologies, networking, and AI-integrated systems. He has built projects such as PacketSentry, PharmaGuard, NyaySetu, and TerminalHire, and is currently seeking backend, cloud, software engineering, or AI-application internship opportunities."
+      "answer": "Mrudul Bokade is a final-year Electronics and Telecommunication engineering student from Pune with a strong interest in backend development, cloud technologies, networking, and AI-integrated systems. He has built projects such as PacketSentry, VectorDB (a local vector database and RAG engine built from scratch), PharmaGuard, NyaySetu, and TerminalHire, and is currently seeking backend, cloud, software engineering, or AI-application internship opportunities."
     },
     "why_should_we_hire_candidate": {
-      "answer": "Based on the current profile, Mrudul would be a strong candidate for backend, cloud, software engineering, and AI-application internship roles because he focuses on building complete, working systems rather than isolated features. Through projects such as PacketSentry, PharmaGuard, and TerminalHire, he has gained hands-on experience with backend development, APIs, databases, cloud deployment, networking concepts, and AI integration. He learns quickly, communicates clearly, and thinks about scalability, reliability, and future improvements while building solutions. Although he is still early in his career and does not yet have formal industry internship experience, he has consistently taken ownership of projects and delivered end-to-end applications."
+      "answer": "Based on the current profile, Mrudul would be a strong candidate for backend, cloud, software engineering, and AI-application internship roles because he focuses on building complete, working systems rather than isolated features. Through projects such as VectorDB, PacketSentry, PharmaGuard, and TerminalHire, he has gained hands-on experience with vector search algorithms (HNSW, KD-Tree), RAG pipelines, backend development, APIs, databases, cloud deployment, and networking concepts. He learns quickly, communicates clearly, and thinks about scalability, reliability, and future improvements while building solutions."
     },
     "career_goal": {
       "answer": "Mrudul's long-term goal is to grow into a cloud and DevOps engineer with strong applied AI capabilities. In the near term, he wants to strengthen his backend, cloud, deployment, infrastructure, and systems engineering skills through real-world projects and industry experience."
@@ -28,13 +28,13 @@
       "answer": "Mrudul is primarily looking for hybrid or on-site opportunities. He is open to relocation depending on the role, learning opportunities, and long-term growth potential."
     },
     "best_projects": {
-      "answer": "Mrudul's strongest projects are PacketSentry, a deep packet inspection and traffic analysis system; PharmaGuard, an AI-assisted pharmacogenomic analysis platform; NyaySetu, a RAG-based legal intelligence platform; and TerminalHire, an AI-powered recruiter-facing portfolio assistant that combines structured candidate data, prompt engineering, and LLM-based conversational interaction."
+      "answer": "Mrudul's strongest projects are VectorDB, a local vector database engine built from scratch in Python with HNSW indexing and RAG; PacketSentry, a deep packet inspection and traffic analysis system; PharmaGuard, an AI-assisted pharmacogenomic analysis platform; NyaySetu, a RAG-based legal intelligence platform; and TerminalHire, an AI-powered recruiter-facing portfolio OS."
     },
     "hardest_project": {
-      "answer": "The most technically challenging project was PacketSentry because it required correlating information across multiple protocol layers and designing a reliable pipeline that connects packet, flow, DNS, HTTP, and TLS metadata to identify application-level traffic and suspicious behavior."
+      "answer": "The most technically challenging projects were VectorDB (implementing multi-layer HNSW graph indexing and RAG retrieval algorithms from scratch) and PacketSentry (correlating packet, flow, DNS, HTTP, and TLS metadata across multiple network protocol layers)."
     },
     "what_makes_him_different": {
-      "answer": "What makes Mrudul stand out is that he focuses on building complete end-to-end systems rather than isolated assignments. His projects combine backend development, networking, cloud deployment, AI integration, and practical problem solving, and he is able to independently take a project from idea to deployment."
+      "answer": "What makes Mrudul stand out is that he focuses on building complete end-to-end systems from scratch—such as building a vector database engine with HNSW graphs and a deep packet inspection tool independently. His projects combine backend development, networking, vector search, cloud deployment, and AI integration."
     },
     "availability": {
       "answer": "Mrudul is available for internship opportunities and is actively looking for roles where he can contribute to backend, cloud, AI-integrated, or systems-oriented engineering work while continuing to learn and grow professionally."

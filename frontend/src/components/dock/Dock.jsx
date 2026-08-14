@@ -1,47 +1,212 @@
-import SpecularButton from "../ui/SpecularButton";
+'use client';
 
-export default function Dock({ items = [], windows = {}, onSelect }) {
+import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from 'motion/react';
+import { Children, cloneElement, useEffect, useMemo, useRef, useState } from 'react';
+import SpecularButton from '../ui/SpecularButton';
+
+import './Dock.css';
+
+function DockItem({
+  children,
+  className = '',
+  onClick,
+  mouseX,
+  spring,
+  distance,
+  magnification,
+  baseItemSize,
+  label,
+  isOpen,
+  isPrimary
+}) {
+  const ref = useRef(null);
+  const isHovered = useMotionValue(0);
+
+  const itemWidthBase = isPrimary ? 115 : baseItemSize;
+  const itemWidthMag = isPrimary ? 140 : magnification;
+
+  const mouseDistance = useTransform(mouseX, val => {
+    const rect = ref.current?.getBoundingClientRect() ?? {
+      x: 0,
+      width: itemWidthBase
+    };
+    return val - rect.x - itemWidthBase / 2;
+  });
+
+  const targetWidth = useTransform(
+    mouseDistance,
+    [-distance, 0, distance],
+    [itemWidthBase, itemWidthMag, itemWidthBase]
+  );
+  const targetHeight = useTransform(
+    mouseDistance,
+    [-distance, 0, distance],
+    [baseItemSize, magnification, baseItemSize]
+  );
+
+  const width = useSpring(targetWidth, spring);
+  const height = useSpring(targetHeight, spring);
+
+  const handleKeyDown = e => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      onClick?.();
+    }
+  };
+
   return (
-    <div className="fixed bottom-4 left-1/2 z-30 flex -translate-x-1/2 justify-center pointer-events-auto">
-      <div className="pointer-events-auto flex items-center gap-3 rounded-[22px] border border-white/10 bg-white/[0.05] px-3 py-2 shadow-[0_20px_60px_rgba(0,0,0,0.35)] backdrop-blur-xl">
-        {items.map(({ id, label, icon: Icon, primary }) => {
-          const state = windows?.[id];
+    <motion.div
+      ref={ref}
+      style={{
+        width,
+        height,
+        willChange: "width, height"
+      }}
+      onHoverStart={() => isHovered.set(1)}
+      onHoverEnd={() => isHovered.set(0)}
+      onFocus={() => isHovered.set(1)}
+      onBlur={() => isHovered.set(0)}
+      onClick={onClick}
+      className={`dock-item group ${className}`}
+      tabIndex={0}
+      role="button"
+      aria-haspopup="true"
+      aria-label={label}
+      onKeyDown={handleKeyDown}
+    >
+      {Children.map(children, child =>
+        child ? cloneElement(child, { isHovered }) : null
+      )}
+      {isOpen && <span className="dock-dot" />}
+    </motion.div>
+  );
+}
+
+function DockLabel({ children, className = '', ...rest }) {
+  const { isHovered } = rest;
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    if (!isHovered) return undefined;
+    const unsubscribe = isHovered.on('change', latest => {
+      setIsVisible(latest === 1);
+    });
+    return () => unsubscribe();
+  }, [isHovered]);
+
+  return (
+    <AnimatePresence>
+      {isVisible && (
+        <motion.div
+          initial={{ opacity: 0, y: 0 }}
+          animate={{ opacity: 1, y: -8 }}
+          exit={{ opacity: 0, y: 0 }}
+          transition={{ duration: 0.15 }}
+          className={`dock-label ${className}`}
+          role="tooltip"
+          style={{ x: '-50%' }}
+        >
+          {children}
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
+function DockIcon({ children, className = '' }) {
+  return <div className={`dock-icon ${className}`}>{children}</div>;
+}
+
+export default function Dock({
+  items = [],
+  windows = {},
+  onSelect,
+  className = '',
+  spring = { mass: 0.1, stiffness: 150, damping: 12 },
+  magnification = 72,
+  distance = 180,
+  panelHeight = 64,
+  dockHeight = 256,
+  baseItemSize = 50
+}) {
+  const mouseX = useMotionValue(Infinity);
+  const isHovered = useMotionValue(0);
+
+  const maxHeight = useMemo(
+    () => Math.max(dockHeight, magnification + magnification / 2 + 4),
+    [magnification, dockHeight]
+  );
+  const heightRow = useTransform(isHovered, [0, 1], [panelHeight, maxHeight]);
+  const height = useSpring(heightRow, spring);
+
+  return (
+    <motion.div style={{ height, scrollbarWidth: 'none' }} className="dock-outer">
+      <motion.div
+        onMouseMove={({ pageX }) => {
+          isHovered.set(1);
+          mouseX.set(pageX);
+        }}
+        onMouseLeave={() => {
+          isHovered.set(0);
+          mouseX.set(Infinity);
+        }}
+        className={`dock-panel ${className}`}
+        style={{ height: panelHeight }}
+        role="toolbar"
+        aria-label="Application dock"
+      >
+        {items.map((item, index) => {
+          const state = windows?.[item.id];
           const isOpen = Boolean(state?.isOpen && !state?.minimized);
-          const buttonClassName = primary ? "h-12 px-5" : "h-12 w-12 !p-0";
+          const Icon = item.icon;
+          const isPrimary = Boolean(item.primary);
 
           return (
-            <div key={label} className="relative group">
+            <DockItem
+              key={item.id || index}
+              onClick={() => {
+                if (item.onClick) item.onClick();
+                onSelect?.(item.id);
+              }}
+              className={item.className || ''}
+              mouseX={mouseX}
+              spring={spring}
+              distance={distance}
+              magnification={magnification}
+              baseItemSize={baseItemSize}
+              label={item.label}
+              isOpen={isOpen}
+              isPrimary={isPrimary}
+            >
               <SpecularButton
-                size="sm"
-                radius={18}
-                tint="#dbeafe"
-                tintOpacity={0.1}
-                lineColor="#7dd3fc"
+                radius={16}
+                tint={isPrimary ? "#38bdf8" : "#ffffff"}
+                tintOpacity={isPrimary ? 0.15 : 0.05}
+                lineColor={isPrimary ? "#7dd3fc" : "#e2e8f0"}
                 baseColor="#0f172a"
-                intensity={1.2}
-                shineSize={11}
-                shineFade={36}
-                thickness={1.2}
-                followMouse
+                intensity={1.5}
                 proximity={220}
+                followMouse
                 autoAnimate={false}
-                className={buttonClassName}
-                ariaLabel={label}
-                onClick={() => onSelect?.(id)}
+                ariaLabel={item.label}
+                className="w-full h-full !p-0 border-none bg-transparent flex items-center justify-center pointer-events-none"
               >
-                <span className="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full border border-white/10 bg-black/60 px-2 py-1 text-[10px] text-white/70 opacity-0 transition-opacity group-hover:opacity-100">
-                  {label}
-                </span>
-                {primary ? label : <Icon className="h-5 w-5 text-white/80" />}
+                <DockIcon>
+                  {isPrimary ? (
+                    <span className="flex items-center justify-center gap-2 px-3 font-mono text-xs font-bold text-cyan-200 whitespace-nowrap">
+                      {Icon && <Icon className="w-4.5 h-4.5 text-cyan-300 shrink-0" />}
+                      <span>{item.label}</span>
+                    </span>
+                  ) : (
+                    Icon && <Icon className="w-5 h-5 text-white/90 group-hover:text-white transition-colors" />
+                  )}
+                </DockIcon>
               </SpecularButton>
-
-            {isOpen && (
-              <span className="absolute -bottom-2 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-cyan-300" />
-            )}
-          </div>
+              <DockLabel>{item.label}</DockLabel>
+            </DockItem>
           );
         })}
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

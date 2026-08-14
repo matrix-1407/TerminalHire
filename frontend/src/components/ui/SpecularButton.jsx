@@ -97,8 +97,8 @@ const SpecularButton = ({
     const fx = fxRef.current;
     if (!btn || !fx) return;
 
-    const dpr = window.devicePixelRatio || 1;
-    const renderer = new Renderer({ alpha: true, premultipliedAlpha: true, antialias: true, dpr });
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const renderer = new Renderer({ alpha: true, premultipliedAlpha: true, antialias: false, dpr });
     const gl = renderer.gl;
     gl.clearColor(0, 0, 0, 0);
     gl.enable(gl.BLEND);
@@ -133,16 +133,35 @@ const SpecularButton = ({
       const rect = btn.getBoundingClientRect();
       const w = rect.width;
       const h = rect.height;
+      if (w === 0 || h === 0) return;
       renderer.setSize(w + PAD * 2, h + PAD * 2);
       program.uniforms.uCenter.value = [(PAD + w / 2) * dpr, (PAD + h / 2) * dpr];
       program.uniforms.uHalfSize.value = [(w / 2) * dpr, (h / 2) * dpr];
     };
+
     const ro = new ResizeObserver(resize);
     ro.observe(btn);
     resize();
 
     let pointerAngle = null;
     let proximityT = 0;
+    let isAnimating = false;
+    let raf = 0;
+    let angle = 2.4;
+    let idleAngle = 2.4;
+    let bright = 0;
+    let last = performance.now();
+
+    const lineC = new Color();
+    const baseC = new Color();
+
+    const startLoop = () => {
+      if (isAnimating) return;
+      isAnimating = true;
+      last = performance.now();
+      raf = requestAnimationFrame(update);
+    };
+
     const onPointerMove = (e) => {
       const rect = btn.getBoundingClientRect();
       const cx = rect.left + rect.width / 2;
@@ -150,6 +169,7 @@ const SpecularButton = ({
       const dx = Math.max(rect.left - e.clientX, 0, e.clientX - rect.right);
       const dy = Math.max(rect.top - e.clientY, 0, e.clientY - rect.bottom);
       const dist = Math.hypot(dx, dy);
+
       if (dist === 0) {
         const nx = (e.clientX - cx) / (rect.width / 2);
         const ny = (cy - e.clientY) / (rect.height / 2);
@@ -157,22 +177,18 @@ const SpecularButton = ({
       } else {
         pointerAngle = Math.atan2(cy - e.clientY, e.clientX - cx);
       }
+
       const t = Math.max(0, 1 - dist / Math.max(propsRef.current.proximity, 1));
       proximityT = t * t * (3 - 2 * t);
+
+      if (proximityT > 0 || propsRef.current.autoAnimate) {
+        startLoop();
+      }
     };
-    window.addEventListener("pointermove", onPointerMove);
 
-    let angle = 2.4;
-    let idleAngle = 2.4;
-    let bright = 0;
-    let last = performance.now();
-    let raf = 0;
-
-    const lineC = new Color();
-    const baseC = new Color();
+    window.addEventListener("pointermove", onPointerMove, { passive: true });
 
     const update = (now) => {
-      raf = requestAnimationFrame(update);
       const dt = Math.min((now - last) / 1000, 0.05);
       last = now;
       const p = propsRef.current;
@@ -196,9 +212,22 @@ const SpecularButton = ({
       program.uniforms.uShineSize.value = (p.shineSize * Math.PI) / 180;
       program.uniforms.uShineFade.value = (p.shineFade * Math.PI) / 180;
       program.uniforms.uThickness.value = p.thickness * dpr;
+
       renderer.render({ scene: mesh });
+
+      // Pause loop when fully faded out to save 100% CPU/GPU resources
+      if (!p.autoAnimate && proximityT === 0 && bright < 0.001) {
+        isAnimating = false;
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        return;
+      }
+
+      raf = requestAnimationFrame(update);
     };
-    raf = requestAnimationFrame(update);
+
+    if (propsRef.current.autoAnimate) {
+      startLoop();
+    }
 
     return () => {
       cancelAnimationFrame(raf);

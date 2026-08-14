@@ -30,6 +30,7 @@ export default function Window({
   const [position, setPosition] = useState(() => resolvePosition(defaultPosition));
   const [maximized, setMaximized] = useState(false);
   const dragRef = useRef({ active: false, offsetX: 0, offsetY: 0 });
+  const rafRef = useRef(0);
 
   useLayoutEffect(() => {
     setPosition(resolvePosition(defaultPosition));
@@ -42,7 +43,7 @@ export default function Window({
       setPosition(resolvePosition(defaultPosition));
     };
 
-    window.addEventListener("resize", handleResize);
+    window.addEventListener("resize", handleResize, { passive: true });
 
     return () => {
       window.removeEventListener("resize", handleResize);
@@ -52,22 +53,28 @@ export default function Window({
   useEffect(() => {
     const move = (event) => {
       if (!dragRef.current.active || maximized) return;
-      setPosition({
-        x: Math.max(8, event.clientX - dragRef.current.offsetX),
-        y: Math.max(56, event.clientY - dragRef.current.offsetY),
+      
+      const newX = Math.max(8, event.clientX - dragRef.current.offsetX);
+      const newY = Math.max(36, event.clientY - dragRef.current.offsetY);
+
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      rafRef.current = requestAnimationFrame(() => {
+        setPosition({ x: newX, y: newY });
       });
     };
 
     const up = () => {
       dragRef.current.active = false;
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
 
-    window.addEventListener("pointermove", move);
-    window.addEventListener("pointerup", up);
+    window.addEventListener("pointermove", move, { passive: true });
+    window.addEventListener("pointerup", up, { passive: true });
 
     return () => {
       window.removeEventListener("pointermove", move);
       window.removeEventListener("pointerup", up);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
   }, [maximized]);
 
@@ -90,44 +97,48 @@ export default function Window({
 
   return (
     <div
-      className={`pointer-events-auto absolute rounded-[28px] border border-white/10 bg-white/[0.06] backdrop-blur-2xl shadow-[0_20px_80px_rgba(0,0,0,0.45)] overflow-hidden flex flex-col ${
-        maximized ? "inset-3 md:inset-5" : "w-[min(1120px,calc(100vw-2rem))] h-[min(80vh,800px)]"
+      className={`pointer-events-auto absolute top-0 left-0 rounded-2xl border border-white/[0.08] bg-[#0d1117]/95 backdrop-blur-2xl shadow-[0_25px_90px_rgba(0,0,0,0.65)] overflow-hidden flex flex-col select-none ${
+        maximized ? "inset-3 md:inset-5 !transform-none" : "w-[min(1120px,calc(100vw-2rem))] h-[min(80vh,800px)]"
       } ${className}`.trim()}
       style={
         maximized
           ? { zIndex }
           : {
               zIndex,
-              left: `${position.x}px`,
-              top: `${position.y}px`,
+              transform: `translate3d(${position.x}px, ${position.y}px, 0)`,
+              willChange: "transform",
             }
       }
       onPointerDown={() => onFocus?.()}
     >
       <div
-        className="h-14 border-b border-white/10 flex items-center justify-between px-5 bg-black/20 cursor-grab active:cursor-grabbing"
+        className="h-10 border-b border-white/[0.08] flex items-center justify-between px-4 bg-black/40 cursor-grab active:cursor-grabbing shrink-0"
         onPointerDown={startDrag}
       >
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            aria-label="Close window"
-            onClick={onClose}
-            className="w-3 h-3 rounded-full bg-red-400 hover:brightness-110"
-          />
-          <button
-            type="button"
-            aria-label="Minimize window"
-            onClick={onMinimize}
-            className="w-3 h-3 rounded-full bg-yellow-400 hover:brightness-110"
-          />
-          <button
-            type="button"
-            aria-label="Maximize window"
-            onClick={() => setMaximized((prev) => !prev)}
-            className="w-3 h-3 rounded-full bg-green-400 hover:brightness-110"
-          />
-          <span className="text-sm text-white/75 ml-2 font-medium">{title}</span>
+        <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2 group/controls">
+            <button
+              type="button"
+              aria-label="Close window"
+              onClick={onClose}
+              className="w-3 h-3 rounded-full bg-[#ff5f56] hover:brightness-110 transition-transform active:scale-95 flex items-center justify-center text-[8px] text-black font-bold opacity-90 hover:opacity-100 cursor-pointer"
+            />
+            <button
+              type="button"
+              aria-label="Minimize window"
+              onClick={onMinimize}
+              className="w-3 h-3 rounded-full bg-[#ffbd2e] hover:brightness-110 transition-transform active:scale-95 flex items-center justify-center text-[8px] text-black font-bold opacity-90 hover:opacity-100 cursor-pointer"
+            />
+            <button
+              type="button"
+              aria-label="Maximize window"
+              onClick={() => setMaximized((prev) => !prev)}
+              className="w-3 h-3 rounded-full bg-[#27c93f] hover:brightness-110 transition-transform active:scale-95 flex items-center justify-center text-[8px] text-black font-bold opacity-90 hover:opacity-100 cursor-pointer"
+            />
+          </div>
+          <span className="font-mono text-xs text-white/70 ml-2 font-medium tracking-tight truncate max-w-[280px] sm:max-w-md">
+            {title}
+          </span>
         </div>
 
         <div className="flex items-center gap-3">

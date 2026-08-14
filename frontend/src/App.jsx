@@ -1,22 +1,50 @@
 import { useMemo, useState } from "react";
-import { FileText, Globe, Code2, UserRound, TerminalSquare } from "lucide-react";
+import {
+  FileText,
+  Globe,
+  Code2,
+  CircleUserRound,
+  TerminalSquare,
+  FolderGit2,
+  Cpu,
+  BriefcaseBusiness,
+  Mail,
+} from "lucide-react";
 
 import DesktopShell from "./components/desktop/DesktopShell";
 import TerminalWindow from "./components/terminal/TerminalWindow";
 import ExternalWindow from "./components/windows/ExternalWindow";
+import AboutMeWindow from "./components/windows/AboutMeWindow";
+import ProjectsWindow from "./components/windows/ProjectsWindow";
+import SkillsWindow from "./components/windows/SkillsWindow";
+import ContactWindow from "./components/windows/ContactWindow";
 
 const desktopItems = [
+  {
+    id: "terminal",
+    label: "Ask Me",
+    icon: TerminalSquare,
+  },
+  {
+    id: "aboutme",
+    label: "About Me",
+    icon: CircleUserRound,
+  },
+  {
+    id: "projects",
+    label: "Projects",
+    icon: FolderGit2,
+  },
+  {
+    id: "skills",
+    label: "Skills",
+    icon: Cpu,
+  },
   {
     id: "resume",
     label: "Resume",
     icon: FileText,
     href: "https://drive.google.com/file/d/1klRUfr8mcAEAr4ZkwcXFO_30c1zcKEKP/view?pli=1",
-  },
-  {
-    id: "portfolio",
-    label: "Portfolio",
-    icon: Globe,
-    href: "https://mrudul.dev",
   },
   {
     id: "github",
@@ -27,27 +55,72 @@ const desktopItems = [
   {
     id: "linkedin",
     label: "LinkedIn",
-    icon: UserRound,
+    icon: BriefcaseBusiness,
     href: "https://www.linkedin.com/in/mrudul-bokade-140705mb",
+  },
+  {
+    id: "contact",
+    label: "Contact",
+    icon: Mail,
   },
 ];
 
 const dockItems = [
-  { id: "resume", label: "Resume", icon: FileText },
+  { id: "aboutme", label: "About Me", icon: CircleUserRound },
   { id: "portfolio", label: "Portfolio", icon: Globe },
   { id: "github", label: "GitHub", icon: Code2 },
-  { id: "linkedin", label: "LinkedIn", icon: UserRound },
-  { id: "terminal", label: "TerminalHire", icon: TerminalSquare, primary: true },
+  { id: "linkedin", label: "LinkedIn", icon: BriefcaseBusiness },
+  { id: "terminal", label: "Ask Me", icon: TerminalSquare, primary: true },
 ];
 
 const defaultWindows = {
   terminal: {
     id: "terminal",
-    title: "terminalhire :: recruiter-mode",
+    title: "ask-me — recruiter session",
     kind: "terminal",
     href: "",
     isOpen: false,
     minimized: false,
+    z: 40,
+    position: { center: true, y: 36 },
+  },
+  aboutme: {
+    id: "aboutme",
+    title: "About Me",
+    kind: "aboutme",
+    href: "",
+    isOpen: false,
+    minimized: true,
+    z: 40,
+    position: { center: true, y: 36 },
+  },
+  projects: {
+    id: "projects",
+    title: "Projects",
+    kind: "projects",
+    href: "",
+    isOpen: false,
+    minimized: true,
+    z: 40,
+    position: { center: true, y: 36 },
+  },
+  skills: {
+    id: "skills",
+    title: "Skills",
+    kind: "skills",
+    href: "",
+    isOpen: false,
+    minimized: true,
+    z: 40,
+    position: { center: true, y: 36 },
+  },
+  contact: {
+    id: "contact",
+    title: "Contact",
+    kind: "contact",
+    href: "",
+    isOpen: false,
+    minimized: true,
     z: 40,
     position: { center: true, y: 36 },
   },
@@ -186,10 +259,9 @@ export default function App() {
   );
 
   const menuItems = [
-    { label: "TerminalHire", windowId: "terminal" },
-    { label: "Projects", windowId: "portfolio" },
-    { label: "Resume", windowId: "resume" },
-    { label: "Contact", windowId: "linkedin" },
+    { label: "About Me", windowId: "aboutme" },
+    { label: "Skills", windowId: "skills" },
+    { label: "Contact", windowId: "contact" },
   ];
 
   return (
@@ -217,6 +289,62 @@ export default function App() {
           );
         }
 
+        if (win.kind === "aboutme") {
+          return (
+            <AboutMeWindow
+              key={win.id}
+              title={win.title}
+              zIndex={win.z}
+              defaultPosition={win.position}
+              onFocus={() => focusWindow(win.id)}
+              onMinimize={() => minimizeWindow(win.id)}
+              onClose={() => closeWindow(win.id)}
+            />
+          );
+        }
+
+        if (win.kind === "projects") {
+          return (
+            <ProjectsWindow
+              key={win.id}
+              title={win.title}
+              zIndex={win.z}
+              defaultPosition={win.position}
+              onFocus={() => focusWindow(win.id)}
+              onMinimize={() => minimizeWindow(win.id)}
+              onClose={() => closeWindow(win.id)}
+            />
+          );
+        }
+
+        if (win.kind === "skills") {
+          return (
+            <SkillsWindow
+              key={win.id}
+              title={win.title}
+              zIndex={win.z}
+              defaultPosition={win.position}
+              onFocus={() => focusWindow(win.id)}
+              onMinimize={() => minimizeWindow(win.id)}
+              onClose={() => closeWindow(win.id)}
+            />
+          );
+        }
+
+        if (win.kind === "contact") {
+          return (
+            <ContactWindow
+              key={win.id}
+              title={win.title}
+              zIndex={win.z}
+              defaultPosition={win.position}
+              onFocus={() => focusWindow(win.id)}
+              onMinimize={() => minimizeWindow(win.id)}
+              onClose={() => closeWindow(win.id)}
+            />
+          );
+        }
+
         return (
           <ExternalWindow
             key={win.id}
@@ -233,3 +361,4 @@ export default function App() {
     </DesktopShell>
   );
 }
+

@@ -85,6 +85,46 @@
       ]
     },
     {
+      "name": "VectorDB",
+      "category": "Vector Database & Local RAG Engine from Scratch",
+      "github": "https://github.com/matrix-1407/VectorDB",
+      "ownership": "Solo",
+      "description": "A production-grade vector database engine built from scratch in Python with a live web UI, RAG pipeline, and three search algorithms (HNSW, KD-Tree, Brute Force) with zero cloud dependencies running 100% locally.",
+      "technologies": [
+        "Python",
+        "FastAPI",
+        "HNSW Graph",
+        "KD-Tree",
+        "Ollama",
+        "RAG Pipeline",
+        "PCA Scatter Plot",
+        "Cosine Similarity"
+      ],
+      "architecture": [
+        "Local Ollama embedding model (nomic-embed-text 768D)",
+        "HNSW multi-layer graph indexer for O(log N) search",
+        "Text word chunker (250 words / 30 overlap)",
+        "Local LLM generator (llama3.2)",
+        "FastAPI REST endpoints and live PCA visualization"
+      ],
+      "key_features": [
+        "3 Search Algorithms implemented from scratch: HNSW graph O(log N), KD-Tree, and Brute Force scan",
+        "3 Distance Metrics: Cosine similarity, Euclidean distance, Manhattan distance",
+        "2D PCA Scatter Plot: live visualization of semantic vector space clusters",
+        "Real Document Embedding: local Ollama nomic-embed-text (768D) vector conversion",
+        "RAG Pipeline: document upload, auto-chunking, HNSW context retrieval, and local LLM answers",
+        "Zero Cloud Cost: 100% local, no API keys, no monthly bills"
+      ],
+      "contribution": "Designed and built the full vector database engine, HNSW multi-layer graph indexer, distance metric functions, RAG pipeline, FastAPI endpoints, and interactive web visualizer from scratch.",
+      "hardest_part": "Implementing the multi-layer HNSW graph data structure and search traversal algorithms in pure Python while ensuring efficient nearest-neighbor retrieval across 768-dimensional vector spaces.",
+      "future_improvements": [
+        "Disk index persistence",
+        "Scalar Quantization (SQ8) for memory compression",
+        "Hybrid Search (BM25 + HNSW with RRF)",
+        "3D vector space visualizer"
+      ]
+    },
+    {
       "name": "NyaySetu",
       "category": "RAG-Based Legal Intelligence Platform",
       "github": "https://github.com/matrix-1407/NyayaSetu",
@@ -118,68 +158,68 @@
       ]
     },
     {
-        "name": "My Corner in Matrix",
-        "category": "Personal Portfolio Website",
-        "github": "https://github.com/matrix-1407/my-personal-portfolio-website",
-        "live_url": "https://mrudul.dev",
-        "ownership": "Solo",
-        "description": "A personal portfolio website built from core web technologies with a Matrix-inspired cyberpunk aesthetic, glassmorphism UI, interactive animations, and a custom terminal-style interface for exploring projects and profile information.",
-        "technologies": [
-            "HTML5",
-            "CSS3",
-            "JavaScript",
-            "SVG",
-            "Vercel"
-        ],
-        "key_features": [
-            "Matrix-inspired cyberpunk visual system",
-            "Glassmorphism interface",
-            "Custom terminal overlay",
-            "Typewriter-style terminal output",
-            "Scroll-based animations",
-            "Intersection Observer interactions",
-            "Neural-link style initialization sequence",
-            "Interactive project archive",
-            "Responsive portfolio presentation"
-        ],
-        "contribution": "Designed and developed the complete portfolio website independently, including the interface, visual system, animations, terminal interaction and deployment.",
-        "hardest_part": "Creating an immersive interface and interactive terminal experience using only core web technologies while keeping the website lightweight and fast.",
-        "future_improvements": [
-            "Add more interactive desktop-style experiences",
-            "Improve accessibility and keyboard navigation",
-            "Add richer project interaction and case-study pages",
-            "Introduce a more dynamic content management approach"
-        ]
+      "name": "TerminalHire",
+      "category": "AI Recruiter Assistant & macOS Portfolio OS",
+      "github": "https://github.com/matrix-1407/TerminalHire",
+      "ownership": "Solo",
+      "description": "An AI-powered recruiter assistant and macOS-inspired desktop portfolio OS featuring a developer terminal interface (Ask Me), streaming AI responses, deterministic JD suitability analysis, and full window management.",
+      "technologies": [
+        "Python",
+        "FastAPI",
+        "React",
+        "Groq API",
+        "Tailwind CSS",
+        "Vector Search",
+        "Docker"
+      ],
+      "key_features": [
+        "macOS-inspired desktop environment with draggable windows, dock, and menu bar",
+        "Warp/iTerm2 developer-style recruiter terminal (Ask Me)",
+        "Streaming responses via Groq API (Llama 3.3 70B)",
+        "Deterministic job description parsing and suitability analysis (TXT, PDF, DOCX)",
+        "Interactive candidate knowledge retrieval across projects, skills, and background"
+      ],
+      "contribution": "Designed and developed the complete application independently, including FastAPI backend API streaming routes, JD analysis algorithms, Groq LLM integration, and React desktop window shell.",
+      "hardest_part": "Connecting deterministic job description skill-matching algorithms with streaming LLM response generation while maintaining a believable macOS desktop environment.",
+      "future_improvements": [
+        "Multi-candidate evaluation dashboards",
+        "Advanced interactive coding environment execution",
+        "Extended recruitment analytics"
+      ]
     },
     {
-        "name": "ASCII Art Video Player",
-        "category": "Computer Vision / Terminal Application",
-        "github": "https://github.com/matrix-1407/ASCII-art",
-        "ownership": "Solo",
-        "description": "A Python terminal application that converts video frames into ASCII characters and plays the resulting animation directly in the terminal.",
-        "technologies": [
-            "Python",
-            "OpenCV",
-            "NumPy",
-            "Terminal"
-        ],
-        "key_features": [
-            "Real-time video-to-ASCII conversion",
-            "Supports video formats handled by OpenCV",
-            "Configurable terminal width",
-            "Adjustable playback FPS",
-            "Grayscale frame processing",
-            "Brightness-to-character mapping"
-        ],
-        "contribution": "Designed and developed the complete application independently.",
-        "hardest_part": "Converting video frames into readable ASCII output while maintaining a usable playback experience in a terminal, including frame processing, brightness mapping and configurable display dimensions.",
-        "future_improvements": [
-            "Add colored ANSI terminal output",
-            "Improve frame-processing performance",
-            "Add configurable character sets",
-            "Support image and webcam input",
-            "Add terminal resizing awareness"
-        ]
+      "name": "My Corner in Matrix",
+      "category": "Personal Portfolio Website",
+      "github": "https://github.com/matrix-1407/my-personal-portfolio-website",
+      "live_url": "https://mrudul.dev",
+      "ownership": "Solo",
+      "description": "A personal portfolio website built from core web technologies with a Matrix-inspired cyberpunk aesthetic, glassmorphism UI, interactive animations, and a custom terminal-style interface for exploring projects and profile information.",
+      "technologies": [
+        "HTML5",
+        "CSS3",
+        "JavaScript",
+        "SVG",
+        "Vercel"
+      ],
+      "key_features": [
+        "Matrix-inspired cyberpunk visual system",
+        "Glassmorphism interface",
+        "Custom terminal overlay",
+        "Typewriter-style terminal output",
+        "Scroll-based animations",
+        "Intersection Observer interactions",
+        "Neural-link style initialization sequence",
+        "Interactive project archive",
+        "Responsive portfolio presentation"
+      ],
+      "contribution": "Designed and developed the complete portfolio website independently, including the interface, visual system, animations, terminal interaction and deployment.",
+      "hardest_part": "Creating an immersive interface and interactive terminal experience using only core web technologies while keeping the website lightweight and fast.",
+      "future_improvements": [
+        "Add more interactive desktop-style experiences",
+        "Improve accessibility and keyboard navigation",
+        "Add richer project interaction and case-study pages",
+        "Introduce a more dynamic content management approach"
+      ]
     }
   ]
 }
