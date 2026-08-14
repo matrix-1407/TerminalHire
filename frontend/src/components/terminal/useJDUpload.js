@@ -1,4 +1,5 @@
 import { useCallback, useState } from "react";
+import { API_BASE_URL } from "../../config/api";
 
 const ACCEPTED_EXTENSIONS = [".pdf", ".docx", ".txt"];
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
@@ -40,7 +41,7 @@ export default function useJDUpload({ onComplete, onError } = {}) {
     setProgress(25);
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/jd/analyze", {
+      const response = await fetch(`${API_BASE_URL}/api/jd/analyze`, {
         method: "POST",
         body: formData,
       });

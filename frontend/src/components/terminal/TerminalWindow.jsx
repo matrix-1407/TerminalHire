@@ -21,6 +21,7 @@ import Window from "../windows/Window";
 import JDUploadButton from "./JDUploadButton";
 import JDResultCard from "./JDResultCard";
 import useJDUpload from "./useJDUpload";
+import { API_BASE_URL } from "../../config/api";
 
 const nowTime = () =>
   new Date().toLocaleTimeString([], {
@@ -520,7 +521,7 @@ function TerminalWindow({
     ]);
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/chat/stream", {
+      const response = await fetch(`${API_BASE_URL}/api/chat/stream`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

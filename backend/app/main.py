@@ -1,22 +1,26 @@
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.services.profile_service import load_candidate_profile
-
 from app.prompts.prompt_builder import build_system_prompt
-
 from app.services.fast_answers import get_fast_answer
 from app.routes.chat import router as chat_router
 from app.routes.jd import router as jd_router
 
 app = FastAPI(title="TerminalHire API")
 
+allowed_origins_raw = os.getenv("ALLOWED_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173,http://localhost:3000")
+allowed_origins = [origin.strip() for origin in allowed_origins_raw.split(",") if origin.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=allowed_origins if "*" not in allowed_origins else ["*"],
+    allow_origin_regex=r"https://.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 @app.get("/")
 async def root():
@@ -33,15 +37,18 @@ async def get_profile():
     profile = load_candidate_profile()
     return profile.model_dump()
 
+
 @app.get("/prompt-preview")
 async def prompt_preview():
     prompt = build_system_prompt()
     return {"length": len(prompt), "preview": prompt[:3000]}
 
+
 @app.get("/fast-answer")
 async def fast_answer(q: str):
     answer = get_fast_answer(q)
     return {"answer": answer}
+
 
 app.include_router(chat_router, tags=["chat"])
 app.include_router(jd_router, tags=["jd"])
