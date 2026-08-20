@@ -1,7 +1,7 @@
 import os
 
 from dotenv import load_dotenv
-from groq import Groq
+# pyrefly: ignore [missing-import]
 from groq import Groq, RateLimitError
 
 from app.prompts.prompt_builder import build_system_prompt
