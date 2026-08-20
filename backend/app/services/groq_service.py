@@ -2,7 +2,7 @@ import os
 
 from dotenv import load_dotenv
 # pyrefly: ignore [missing-import]
-from groq import Groq, RateLimitError
+from groq import Groq, RateLimitError, NotFoundError, AuthenticationError
 
 from app.prompts.prompt_builder import build_system_prompt
 
@@ -18,7 +18,7 @@ client = Groq(
     timeout=30
 )
 
-model = "llama-3.3-70b-versatile"
+model = "openai/gpt-oss-120b"
 
 
 def generate_response(message: str, history: list):
@@ -66,3 +66,7 @@ def generate_response(message: str, history: list):
             "TerminalHire has temporarily reached the daily Groq API limit. "
             "Please try again later or try using a shorter query."
         )
+    except (NotFoundError, AuthenticationError) as e:
+        return f"AI configuration error: {str(e)}"
+    except Exception as e:
+        return f"An unexpected error occurred. Please try again. ({type(e).__name__})"

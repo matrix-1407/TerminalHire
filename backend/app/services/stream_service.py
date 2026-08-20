@@ -1,6 +1,6 @@
 import asyncio
 # pyrefly: ignore [missing-import]
-from groq import RateLimitError
+from groq import RateLimitError, NotFoundError, AuthenticationError
 
 from app.services.groq_service import client, model
 from app.prompts.prompt_builder import build_system_prompt
@@ -56,3 +56,7 @@ async def stream_response(message: str, history: list):
 
     except RateLimitError:
         yield "TerminalHire has temporarily reached the daily Groq API limit. Please try again later."
+    except (NotFoundError, AuthenticationError) as e:
+        yield f"AI configuration error: {str(e)}"
+    except Exception as e:
+        yield f"An unexpected error occurred. Please try again. ({type(e).__name__})"
